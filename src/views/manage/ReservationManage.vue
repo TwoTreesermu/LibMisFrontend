@@ -3,7 +3,7 @@
 </template>
 <script>
 export default {
-  name: "ReservationManageView",
+  name: "ReservationManage",
   components :{}
 }
 </script>
