@@ -2,6 +2,7 @@
   <div>
     <Header/>
     <div style="display: flex">
+<!--      232-->
       <Aside/>
       <router-view style="flex: 1"/>
     </div>
