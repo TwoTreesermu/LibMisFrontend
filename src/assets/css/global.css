@@ -3,7 +3,12 @@
     padding:0;
     box-sizing: border-box;
 }
-
+body {
+    color: #333;
+    font-size:14px;
+    margin: 0;
+    padding: 0;
+}
 .el-dropdown-link {
     font-size: 20px; /* 增大字体大小 */
     color: #333; /* 设置字体颜色 */
