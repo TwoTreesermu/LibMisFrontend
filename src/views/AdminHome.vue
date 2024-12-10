@@ -2,7 +2,7 @@
   <div>
     <Header/>
     <div style="display: flex">
-<!--      232-->
+      //  zhiyu
       <Aside/>
       <router-view style="flex: 1"/>
     </div>
