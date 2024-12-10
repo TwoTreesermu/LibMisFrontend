@@ -12,3 +12,7 @@
 .el-dropdown-link:hover {
     cursor: pointer; /* 鼠标悬停时显示手型指针 */
 }
+
+a {
+    text-decoration: none;
+}
