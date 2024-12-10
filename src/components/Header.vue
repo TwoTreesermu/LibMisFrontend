@@ -1,15 +1,16 @@
 <template>
-  <div style="height: 50px; line-height: 50px; border-bottom: 1px solid #ccc; display:
+  <div style="margin-left: 10px;align-items: center; height: 50px; line-height: 50px; border-bottom: 1px solid #ccc; display:
 flex">
-    <div style="width: 200px; padding-left: 30px; font-weight: bold; color: dodgerblue">图书管理系统</div>
+    <el-avatar>Book</el-avatar>
+    <div style="width: 200px; padding-left: 30px; font-weight: bold; color: dodgerblue">
+      图书管理系统
+    </div>
     <div style="flex: 1"></div>
     <div style="width: 150px; display: flex; justify-content: center; align-items: center; font-size: 16px;">
-      欢迎：
+
       <el-dropdown>
         <span class="el-dropdown-link">
-
-          tom
-          <!--<i class="el-icon-arrow-right"></i>-->
+          <el-avatar>tom</el-avatar>
         </span>
         <template #dropdown>
           <el-dropdown-menu>
@@ -20,11 +21,11 @@ flex">
         </template>
       </el-dropdown>
 
-
     </div>
   </div>
 </template>
 <script>
+
 export default {
   name: "Header"
 }
