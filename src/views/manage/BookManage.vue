@@ -20,13 +20,8 @@
       <el-button style="margin-left: 10px" type="primary">查询</el-button>
     </div>
 
-    <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column sortable prop="publishDate" label="出版日期">
-        <template #default="scope">
-          <!-- 修改的地方：使用 formatDate 方法格式化日期 -->
-          {{ formatDate(scope.row.publishDate) }}
-        </template>
-      </el-table-column>
+    <el-table :data="tableData" border stripe style="width: 100%">
+      <el-table-column sortable prop="publishDate" label="出版日期"></el-table-column>
       <el-table-column prop="name" label="书名"></el-table-column>
       <el-table-column prop="author" label="作者"></el-table-column>
       <el-table-column prop="isbn" label="ISBN"></el-table-column>
@@ -52,8 +47,8 @@
         <el-form-item label="作者" :label-width="formLabelWidth">
           <el-input v-model="bookForm.author" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="出版日期" :label-width="formLabelWidth">
-          <el-date-picker v-model="bookForm.publishDate" type="date" placeholder="选择日期"></el-date-picker>
+        <el-form-item label="出版日期"  :label-width="formLabelWidth">
+          <el-date-picker v-model="bookForm.publishDate" type="date" value-format="YYYY-MM-DD" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="ISBN" :label-width="formLabelWidth">
           <el-input v-model="bookForm.isbn" autocomplete="off"></el-input>
@@ -100,15 +95,6 @@ export default {
         publisher: ''
       },
       formLabelWidth: '100px', // 表单项的 label 宽度
-      // 添加 formatDate 方法来格式化日期
-      formatDate(date) {
-        if (!date) return '';
-        const dateObj = new Date(date);
-        const year = dateObj.getFullYear();
-        const month = (dateObj.getMonth() + 1).toString().padStart(2, '0'); // 月份从0开始，所以加1
-        const day = dateObj.getDate().toString().padStart(2, '0');
-        return `${year}-${month}-${day}`;
-      }
     }
   },
   methods: {

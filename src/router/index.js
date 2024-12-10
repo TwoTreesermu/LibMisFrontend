@@ -12,6 +12,9 @@ import UserHome from "@/views/UserHome.vue";
 
 const routes = [
   {
+    path: "/login", name:"Login", component: () => import("../views/Login.vue"),
+  },
+  {
     path: '/',
     name: 'home',
     component: HomeView

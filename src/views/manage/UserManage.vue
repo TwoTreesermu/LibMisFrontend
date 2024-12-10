@@ -3,8 +3,13 @@
     <div style="margin: 10px 0">
       <el-button type="primary" @click="openAddUserDialog">新增用户</el-button>
     </div>
+    <div style="margin: 10px 0">
+      <el-input v-model="search" placeholder="请输入用户名" suffix-icon="el-icon-user" style="width:200px">
+      </el-input>
+      <el-button style="margin-left: 10px" type="primary">查询</el-button>
+    </div>
 
-    <el-table :data="userList" stripe style="width: 100%">
+    <el-table :data="userList" stripe border style="width: 100%">
       <el-table-column prop="id" label="ID"></el-table-column>
       <el-table-column prop="username" label="用户名"></el-table-column>
       <el-table-column prop="email" label="邮箱"></el-table-column>
@@ -51,7 +56,7 @@
 
 <script>
 import { ElDialog, ElForm, ElFormItem, ElInput, ElButton, ElTable, ElTableColumn, ElSelect, ElOption } from 'element-plus';
-
+import { Search } from '@element-plus/icons-vue'
 export default {
     name: 'UserManageView',
     components: {
@@ -67,6 +72,7 @@ export default {
     },
     data() {
       return {
+        search: "",
         userList: [], // 用户列表数据
         userForm: { // 新增用户表单数据
           id: '',
