@@ -1,26 +1,6 @@
 <template>
   <div>
-    <div style="margin: 10px 0">
-      <el-button type="primary">新增</el-button>
-      <el-button>其它</el-button>
-    </div>
-    <div style="margin: 10px 0">
-      <el-input v-model="search" placeholder=" 请 输 入 关 键 字 " style="width:30%">
-      </el-input>
-      <el-button style="margin-left: 10px" type="primary">查询</el-button>
-    </div>
-
-    <el-table :data="tableData" stripe style="width: 100%">
-      <el-table-column sortable prop="date" label="日期"></el-table-column>
-      <el-table-column prop="name" label="姓名"></el-table-column>
-      <el-table-column prop="address" label="地址"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="100">
-        <template #default="scope">
-          <el-button @click="handleEdit(scope.row)" type="text">编辑</el-button>
-          <el-button type="text">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    这里放一些可视化大图：网站访问记录,借阅记录，等
   </div>
 </template>
 

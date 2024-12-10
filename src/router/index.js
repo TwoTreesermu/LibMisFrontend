@@ -1,10 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import BookManageView from "@/views/manage/BookManage.vue";
-import UserManageView from "@/views/manage/UserManage.vue";
-import NotificationManageView from "@/views/manage/NotificationManage.vue";
-import ReservationManageView from "@/views/manage/ReservationManage.vue";
-import BorrowManageView from "@/views/manage/BorrowManage.vue";
+import BookManage from "@/views/manage/BookManage.vue";
+import UserManage from "@/views/manage/UserManage.vue";
+import NotificationManage from "@/views/manage/NotificationManage.vue";
+import ReservationManage from "@/views/manage/ReservationManage.vue";
+import BorrowManage from "@/views/manage/BorrowManage.vue";
+import AdministratorManage from "@/views/manage/AdministratorManage.vue";
+import AdminHome from "@/views/AdminHome.vue";
+import UserHome from "@/views/UserHome.vue";
+
 
 const routes = [
   {
@@ -13,35 +17,77 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/books',
+    path: '/book',
     name: 'BookManage',
-    component: BookManageView
+    component: BookManage
   },
   {
-    path: '/users',
+    path: '/user',
     name: 'UserManage',
-    component: UserManageView
+    component: UserManage,
+    meta: { requiresAuth: true, isAdmin: true }
   },
   {
     path: '/notification',
     name: 'NotificationManage',
-    component: NotificationManageView
+    component: NotificationManage,
+    meta: { requiresAuth: true, isAdmin: true }
   },
   {
     path: '/reservation',
     name: 'ReservationManage',
-    component: ReservationManageView
+    component: ReservationManage,
+    meta: { requiresAuth: true, isAdmin: true }
   },
   {
     path: '/borrow',
     name: 'BorrowManage',
-    component: BorrowManageView
-  }
+    component: BorrowManage,
+  },
+  {
+    path: '/administration',
+    name: 'AdministrationManage',
+    component: AdministratorManage,
+  },
+  {
+    path: '/admin',
+    name: 'AdminHome',
+    component: AdminHome,
+  },
+  {
+    path: '/user',
+    name: 'UserHome',
+    component: UserHome,
+  },
+  // {
+  //   path: '/login',
+  //   name: 'Login',
+  //   component: Login
+  // }
 ]
 
 const router = createRouter({ // 路由工作模式
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+//
+// // 路由守卫
+// router.beforeEach((to, from, next) => {
+//   const { isAuthenticated, userRole } = store.state;
+//   if (to.matched.some(record => record.meta.requiresAuth)) {
+//     if (!isAuthenticated) {
+//       next({ name: 'Login' });
+//     } else {
+//       const isRoleMatch = to.meta.isAdmin ? userRole === 'admin' : userRole === 'user';
+//       if (isRoleMatch) {
+//         next();
+//       } else {
+//         next({ name: 'Login' });
+//       }
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 export default router
