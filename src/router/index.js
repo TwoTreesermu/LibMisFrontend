@@ -50,6 +50,10 @@ const routes = [
         path: 'administration', name: 'AdministrationManage', component: AdministratorManage,
         meta: {title: '管理员信息'}
       },
+      { // 数据统计
+        path: 'dataAnalysis', name: 'DataAnalysis', component: () => import("../views/manager/DataAnalysis.vue"),
+
+      }
     ],
   },
   { // 404

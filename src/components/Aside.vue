@@ -4,34 +4,36 @@
               height: calc(100vh - 60px);">
     <!-- @open="handleOpen"-->
     <!-- @close="handleClose"-->
-    <el-menu>
-        <!--style="border:0;"-->
-        <!--default-active="2"-->
-        <!--class="el-menu-vertical-demo">-->
+    <el-menu router :default-active="router.currentRoute.value.path" style="border: 0">
+      <el-menu-item index="/manager/homePage">
+        <el-icon><House /></el-icon>
+          系统首页
+      </el-menu-item>
 
-      <el-menu-item index="1"  to="/">
-        <el-icon><Menu /></el-icon>
-          <span @click="router.push({path: '/manager/homePage'})">系统首页</span>
+      <el-menu-item index="/manager/dataAnalysis">
+        <el-icon><DataAnalysis/></el-icon>
+        数据统计
       </el-menu-item>
 
       <el-sub-menu index="2">
         <template #title>
-          <el-icon><Menu /></el-icon>
+          <el-icon><Memo /></el-icon>
           信息管理
         </template>
-          <el-menu-item index="2-1" @click="router.push({path: '/manager/book'})">图书管理</el-menu-item>
-          <el-menu-item index="2-2" @click="router.push({path: '/manager/notification'})" >通知管理</el-menu-item>
-          <el-menu-item index="2-3" @click="router.push({path: '/manager/borrow'})">借阅管理</el-menu-item>
-          <el-menu-item index="2-4" @click="router.push({path: '/manager/reservation'})">预约管理</el-menu-item>
+          <el-menu-item index="">图书分类</el-menu-item>             <!-- 还没写视图-->
+          <el-menu-item index="/manager/book">图书信息</el-menu-item>
+          <el-menu-item index="/manager/notification">通知管理</el-menu-item>
+          <el-menu-item index="/manager/borrow">借阅管理</el-menu-item>
+          <el-menu-item index="/manager/reservation">预约管理</el-menu-item>
       </el-sub-menu>
 
       <el-sub-menu index="3">
         <template #title>
-          <el-icon><UserFilled /></el-icon>
+          <el-icon><User /></el-icon>
           用户管理
         </template>
-          <el-menu-item index="3-1" @click="router.push({path: '/manager/administration'})">管理员信息</el-menu-item>
-          <el-menu-item index="3-2" @click="router.push({path: '/manager/user'})">用户信息</el-menu-item>
+          <el-menu-item index="/manager/administration">管理员信息</el-menu-item>
+          <el-menu-item index="/manager/user">普通用户信息</el-menu-item>
       </el-sub-menu>
     </el-menu>
   </div>
@@ -39,6 +41,8 @@
 
 <script setup>
 import {
+  DataAnalysis,
+  House, Memo,
   Menu,
   UserFilled
 } from '@element-plus/icons-vue'
@@ -50,5 +54,7 @@ const componentName ="Aside";
 
 
 <style>
-
+.el-menu .is-active {
+  background-color: #e6ecf7 !important;
+}
 </style>
