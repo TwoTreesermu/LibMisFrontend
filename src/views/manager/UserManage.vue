@@ -4,7 +4,7 @@
       <el-button type="primary" @click="openAddUserDialog">新增用户</el-button>
     </div>
     <div style="margin: 10px 0">
-      <el-input v-model="search" placeholder="请输入用户名" suffix-icon="el-icon-user" style="width:200px">
+      <el-input v-model="search" :prefix-icon="Search" placeholder="请输入用户名" style="width:200px">
       </el-input>
       <el-button style="margin-left: 10px" type="primary">查询</el-button>
     </div>
@@ -59,6 +59,11 @@ import { ElDialog, ElForm, ElFormItem, ElInput, ElButton, ElTable, ElTableColumn
 import { Search } from '@element-plus/icons-vue'
 export default {
     name: 'UserManageView',
+  computed: {
+    Search() {
+      return Search
+    }
+  },
     components: {
       ElDialog,
       ElForm,

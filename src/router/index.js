@@ -1,72 +1,48 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import BookManage from "@/views/manage/BookManage.vue";
-import UserManage from "@/views/manage/UserManage.vue";
-import NotificationManage from "@/views/manage/NotificationManage.vue";
-import ReservationManage from "@/views/manage/ReservationManage.vue";
-import BorrowManage from "@/views/manage/BorrowManage.vue";
-import AdministratorManage from "@/views/manage/AdministratorManage.vue";
-import AdminHome from "@/views/AdminHome.vue";
-import UserHome from "@/views/UserHome.vue";
+import BookManage from "@/views/manager/BookManage.vue";
+import UserManage from "@/views/manager/UserManage.vue";
+import NotificationManage from "@/views/manager/NotificationManage.vue";
+import ReservationManage from "@/views/manager/ReservationManage.vue";
+import BorrowManage from "@/views/manager/BorrowManage.vue";
+import AdministratorManage from "@/views/manager/AdministratorManage.vue";
 
 
 const routes = [
   {
+    path: "/", name:"Login", component: () => import("../views/Login.vue"),
+  },
+  {  // 登录页面
     path: "/login", name:"Login", component: () => import("../views/Login.vue"),
   },
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
+  {  // 用户页面
+    path:"/user", name: "User", component: () => import("../views/User.vue"),
   },
-  {
-    path: '/book',
-    name: 'BookManage',
-    component: BookManage
+  { // 管理员页面
+    path: '/manager', name: 'Manager', component: () => import("../views/Manager.vue"),
+    children: [
+      { // 管理员可视化首页
+        path: "homePage", name: "HomePage", component: () => import("../views/manager/HomePage.vue"),
+      },
+      {  // 图书信息
+        path: 'book', name: 'BookManage', component: BookManage
+      },
+      { // 用户信息
+        path: 'user', name: 'UserManage', component: UserManage, meta: { requiresAuth: true, isAdmin: true }
+      },
+      { // 通知
+        path: 'notification', name: 'NotificationManage', component: NotificationManage, meta: { requiresAuth: true, isAdmin: true }
+      },
+      { // 预约
+        path: 'reservation', name: 'ReservationManage', component: ReservationManage, meta: { requiresAuth: true, isAdmin: true }
+      },
+      { // 借阅
+        path: 'borrow', name: 'BorrowManage', component: BorrowManage,
+      },
+      { // 管理员信息
+        path: 'administration', name: 'AdministrationManage', component: AdministratorManage,
+      },
+    ]
   },
-  {
-    path: '/user',
-    name: 'UserManage',
-    component: UserManage,
-    meta: { requiresAuth: true, isAdmin: true }
-  },
-  {
-    path: '/notification',
-    name: 'NotificationManage',
-    component: NotificationManage,
-    meta: { requiresAuth: true, isAdmin: true }
-  },
-  {
-    path: '/reservation',
-    name: 'ReservationManage',
-    component: ReservationManage,
-    meta: { requiresAuth: true, isAdmin: true }
-  },
-  {
-    path: '/borrow',
-    name: 'BorrowManage',
-    component: BorrowManage,
-  },
-  {
-    path: '/administration',
-    name: 'AdministrationManage',
-    component: AdministratorManage,
-  },
-  {
-    path: '/admin',
-    name: 'AdminHome',
-    component: AdminHome,
-  },
-  {
-    path: '/user',
-    name: 'UserHome',
-    component: UserHome,
-  },
-  // {
-  //   path: '/login',
-  //   name: 'Login',
-  //   component: Login
-  // }
 ]
 
 const router = createRouter({ // 路由工作模式

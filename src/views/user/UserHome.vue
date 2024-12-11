@@ -1,4 +1,4 @@
-<!-- views/AdminHome.vue -->
+<!-- views/HomePage.vue -->
 <template>
   <div>管理员主页</div>
 </template>

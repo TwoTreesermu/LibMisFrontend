@@ -15,7 +15,7 @@
       <el-button type="primary" @click="openAddBookDialog">新增图书</el-button>
     </div>
     <div style="margin: 10px 0">
-      <el-input v-model="search" placeholder="请输入图书关键字" style="width:30%">
+      <el-input v-model="search" :prefix-icon="Search" placeholder="请输入图书关键字" style="width:30%">
       </el-input>
       <el-button style="margin-left: 10px" type="primary">查询</el-button>
     </div>
@@ -69,9 +69,15 @@
 
 <script>
 import { ElDialog, ElForm, ElFormItem, ElInput, ElButton, ElTable, ElTableColumn, ElDatePicker } from 'element-plus';
+import {Search} from "@element-plus/icons-vue";
 
 export default {
   name: 'BookManageView',
+  computed: {
+    Search() {
+      return Search
+    }
+  },
   components: {
     ElDialog,
     ElForm,
