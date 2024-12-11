@@ -12,8 +12,13 @@
 <script setup>
 import Header from "@/components/Header.vue";
 import Aside from "@/components/Aside.vue";
+import {reactive} from "vue";
 
 const componentName = "Manager"
+
+const data = reactive({
+  user: JSON.parse(localStorage.getItem("userdata")),
+})
 </script>
 
 <style scoped>
