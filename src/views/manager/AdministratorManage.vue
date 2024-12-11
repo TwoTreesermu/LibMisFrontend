@@ -42,66 +42,66 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, toRefs } from 'vue';
 import { ElDialog, ElForm, ElFormItem, ElInput, ElButton, ElTable, ElTableColumn, ElSelect, ElOption } from 'element-plus';
 
-export default {
-  name: "AdministratorManageView",
-  components: {
+// 使用 reactive 创建响应式数据对象
+const state = reactive({
+  adminList: [], // 管理员列表数据
+  adminForm: { // 新增/编辑管理员表单数据
+    id: '',
+    username: '',
+    email: '',
+    password: '',
+    role: '管理员' // 默认角色为管理员
+  },
+  adminDialogVisible: false, // 控制新增/编辑管理员对话框显示
+  formLabelWidth: '120px' // 表单项的 label 宽度
+});
 
-  },
-  data() {
-    return {
-      adminList: [], // 管理员列表数据
-      adminForm: { // 新增/编辑管理员表单数据
-        id: '',
-        username: '',
-        email: '',
-        password: '',
-        role: '管理员' // 默认角色为管理员
-      },
-      adminDialogVisible: false, // 控制新增/编辑管理员对话框显示
-      formLabelWidth: '120px' // 表单项的 label 宽度
-    }
-  },
-  methods: {
-    openAddAdminDialog() {
-      this.adminDialogVisible = true;
-      this.adminForm = { // 重置表单
-        id: '',
-        username: '',
-        email: '',
-        password: '',
-        role: 'admin'
-      };
-    },
-    handleEdit(row) {
-      this.adminForm = Object.assign({}, row); // 复制当前行数据到表单
-      this.adminDialogVisible = true;
-    },
-    handleDelete(row) {
-      // 删除管理员的逻辑
-      const index = this.adminList.indexOf(row);
-      if (index !== -1) {
-        this.adminList.splice(index, 1);
-      }
-    },
-    saveAdmin() {
-      // 保存管理员信息的逻辑
-      if (this.adminForm.id) {
-        // 更新管理员信息
-        const index = this.adminList.findIndex(admin => admin.id === this.adminForm.id);
-        if (index !== -1) {
-          this.adminList[index] = Object.assign({}, this.adminForm);
-        }
-      } else {
-        // 添加新管理员
-        this.adminList.push(Object.assign({}, this.adminForm));
-      }
-      this.adminDialogVisible = false;
-    }
+// 将 reactive 对象的属性转化为 refs，以便在模板中使用
+const { adminList, adminForm, adminDialogVisible, formLabelWidth } = toRefs(state);
+
+// 定义方法
+const openAddAdminDialog = () => {
+  state.adminDialogVisible = true;
+  state.adminForm = { // 重置表单
+    id: '',
+    username: '',
+    email: '',
+    password: '',
+    role: 'admin'
+  };
+};
+
+const handleEdit = (row) => {
+  state.adminForm = Object.assign({}, row); // 复制当前行数据到表单
+  state.adminDialogVisible = true;
+};
+
+const handleDelete = (row) => {
+  // 删除管理员的逻辑
+  const index = adminList.value.indexOf(row);
+  if (index !== -1) {
+    adminList.value.splice(index, 1);
   }
-}
+};
+
+const saveAdmin = () => {
+  // 保存管理员信息的逻辑
+  if (state.adminForm.id) {
+    // 更新管理员信息
+    const index = adminList.value.findIndex(admin => admin.id === state.adminForm.id);
+    if (index !== -1) {
+      adminList.value[index] = Object.assign({}, state.adminForm);
+    }
+  } else {
+    // 添加新管理员
+    adminList.value.push(Object.assign({}, state.adminForm));
+  }
+  state.adminDialogVisible = false;
+};
 </script>
 
 <style>

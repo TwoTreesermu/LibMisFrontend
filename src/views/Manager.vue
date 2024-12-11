@@ -3,7 +3,7 @@
     <Header/>
     <div style="display: flex">
       <Aside/>
-      <router-view style="flex: 1"/>
+      <router-view style="flex: 1;background-color:#edeff6;padding: 10px"/>
     </div>
   </div>
 
