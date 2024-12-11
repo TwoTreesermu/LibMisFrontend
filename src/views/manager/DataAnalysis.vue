@@ -1,6 +1,7 @@
 <template>
-  <div>
-    这里放一些可视化大图：网站访问记录,借阅记录，等
+  <div >
+    <span style="text-align:center;font-size: 30px"> 这里放一些可视化大图：网站访问记录,借阅记录，等</span>
+
   </div>
 
 </template>

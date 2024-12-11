@@ -13,7 +13,11 @@ const routes = [
   },
   {  // 登录页面
     path: "/login", name:"Login", component: () => import("../views/Login.vue"),
-    meta: {title:'登录页面'}
+    meta: {title:'登录系统'}
+  },
+  {
+    path: "/register", name:"Register", component: () => import("../views/Register.vue"),
+    meta: {title: '欢迎注册'}
   },
   {  // 用户页面
     path:"/user", name: "User", component: () => import("../views/User.vue"),

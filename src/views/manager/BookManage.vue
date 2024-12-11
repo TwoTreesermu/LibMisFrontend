@@ -126,7 +126,7 @@ const { search, tableData, dialogVisible, bookForm, formLabelWidth } = toRefs(da
 
 // 设置对话框为可见
 const openAddBookDialog = () => {
-  state.dialogVisible = true;
+  data.dialogVisible = true;
 };
 
 const handleEdit = (row) => {

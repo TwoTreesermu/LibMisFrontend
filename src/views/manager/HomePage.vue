@@ -1,6 +1,7 @@
 <template>
   <div>
-    这里想放什么就放什么
+
+    <span style="font-size: 30px;text-align: center;padding-bottom: 100px">系统首页，可放一些有趣的小组件</span>
     
   </div>
 </template>

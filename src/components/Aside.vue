@@ -35,6 +35,10 @@
           <el-menu-item index="/manager/administration">管理员信息</el-menu-item>
           <el-menu-item index="/manager/user">普通用户信息</el-menu-item>
       </el-sub-menu>
+      <el-menu-item index="/login">
+        <el-icon><SwitchButton /></el-icon>
+        退出登录
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -42,9 +46,8 @@
 <script setup>
 import {
   DataAnalysis,
-  House, Memo,
-  Menu,
-  UserFilled
+  House, Memo, SwitchButton,
+
 } from '@element-plus/icons-vue'
 import router from "@/router";
 
