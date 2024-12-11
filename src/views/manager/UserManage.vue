@@ -54,58 +54,49 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, toRefs, computed } from 'vue';
 import { ElDialog, ElForm, ElFormItem, ElInput, ElButton, ElTable, ElTableColumn, ElSelect, ElOption } from 'element-plus';
-import { Search } from '@element-plus/icons-vue'
-export default {
-    name: 'UserManageView',
-  computed: {
-    Search() {
-      return Search
-    }
+import { Search } from '@element-plus/icons-vue';
+
+// 使用 reactive 创建响应式数据对象
+const state = reactive({
+  search: '',
+  userList: [], // 用户列表数据
+  userForm: { // 新增用户表单数据
+    id: '',
+    username: '',
+    email: '',
+    password: '',
+    role: ''
   },
-    components: {
-      ElDialog,
-      ElForm,
-      ElFormItem,
-      ElInput,
-      ElButton,
-      ElTable,
-      ElTableColumn,
-      ElSelect,
-      ElOption
-    },
-    data() {
-      return {
-        search: "",
-        userList: [], // 用户列表数据
-        userForm: { // 新增用户表单数据
-          id: '',
-          username: '',
-          email: '',
-          password: '',
-          role: ''
-        },
-        addUserDialogVisible: false, // 控制新增用户对话框显示
-        formLabelWidth: '120px' // 表单项的 label 宽度
-      }
-    },
-    methods: {
-      openAddUserDialog() {
-        this.addUserDialogVisible = true;
-      },
-      handleEdit(row) {
-        // 编辑用户的逻辑
-      },
-      handleDelete(row) {
-        // 删除用户的逻辑
-      },
-      addUser() {
-        // 添加用户的逻辑
-        this.addUserDialogVisible = false;
-      }
-    }
-  }
+  addUserDialogVisible: false, // 控制新增用户对话框显示
+  formLabelWidth: '120px' // 表单项的 label 宽度
+});
+
+// 将 reactive 对象的属性转化为 refs，以便在模板中使用
+const { search, userList, userForm, addUserDialogVisible, formLabelWidth } = toRefs(state);
+
+// 定义计算属性
+const SearchIcon = computed(() => Search);
+
+// 定义方法
+const openAddUserDialog = () => {
+  state.addUserDialogVisible = true;
+};
+
+const handleEdit = (row) => {
+  // 编辑用户的逻辑
+};
+
+const handleDelete = (row) => {
+  // 删除用户的逻辑
+};
+
+const addUser = () => {
+  // 添加用户的逻辑
+  state.addUserDialogVisible = false;
+};
 </script>
 
 <style>

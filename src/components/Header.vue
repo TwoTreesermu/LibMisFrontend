@@ -1,5 +1,6 @@
 <template>
-  <div style="margin-left: 10px;align-items: center; height: 50px; line-height: 50px; border-bottom: 1px solid #ccc; display:
+  <!--头部菜单栏-->
+  <div style="margin-left: 10px;align-items: center; height: 60px; line-height: 50px; border-bottom: 1px solid #ccc; display:
 flex">
     <el-avatar>Book</el-avatar>
     <div style="width: 200px; padding-left: 30px; font-weight: bold; color: dodgerblue">

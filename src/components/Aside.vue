@@ -1,11 +1,13 @@
 <template>
-  <div>
+  <!--左侧导航菜单-->
+  <div style="width: 150px;border-right: #ddd solid 1px;
+              height: calc(100vh - 60px);">
     <!-- @open="handleOpen"-->
     <!-- @close="handleClose"-->
-    <el-menu
-        style="width: 150px"
-        default-active="2"
-        class="el-menu-vertical-demo">
+    <el-menu>
+        <!--style="border:0;"-->
+        <!--default-active="2"-->
+        <!--class="el-menu-vertical-demo">-->
 
       <el-menu-item index="1"  to="/">
         <el-icon><Menu /></el-icon>

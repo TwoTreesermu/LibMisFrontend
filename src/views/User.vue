@@ -7,10 +7,6 @@
 
 <script setup>
 
-// export default {
-//   name: "User",
-//   components: {},
-// }
 const componentName = "User"
 
 </script>
