@@ -9,7 +9,7 @@
   >
     <!--左侧Logo,标题区域开始-->
     <div style="width: 200px; display:flex; margin-left: 5px;">
-      <img src="@/assets/books.png" alt="" style="width: 50px;height: 50px"/>
+      <img src="@/assets/books.png" alt="" style="width: 40px;height: 40px"/>
       <span style="font-size: 22px; color:#efe6e6">图书管理系统</span>
     </div>
     <!--左侧Logo,标题区域结束-->
