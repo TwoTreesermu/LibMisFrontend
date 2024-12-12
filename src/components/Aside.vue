@@ -1,70 +1,63 @@
 <template>
-  <div>
+  <!--左侧导航菜单-->
+  <div style="width: 150px;border-right: #ddd solid 1px;
+              height: calc(100vh - 60px);">
     <!-- @open="handleOpen"-->
     <!-- @close="handleClose"-->
-    <el-menu
-        style="width: 150px"
-        default-active="2"
-        class="el-menu-vertical-demo">
+    <el-menu router :default-active="router.currentRoute.value.path" style="border: 0">
+      <el-menu-item index="/manager/homePage">
+        <el-icon><House /></el-icon>
+          系统首页
+      </el-menu-item>
 
-      <el-menu-item index="1"  to="/">
-        <el-icon><Menu /></el-icon>
-        <router-link to="/">
-          <span>系统首页</span>
-        </router-link>
+      <el-menu-item index="/manager/dataAnalysis">
+        <el-icon><DataAnalysis/></el-icon>
+        数据统计
       </el-menu-item>
 
       <el-sub-menu index="2">
         <template #title>
-          <el-icon><Menu /></el-icon>
+          <el-icon><Memo /></el-icon>
           信息管理
         </template>
-        <router-link to="/book">
-          <el-menu-item index="2-1">图书管理</el-menu-item>
-        </router-link>
-        <router-link to="/notification">
-          <el-menu-item index="2-2">通知管理</el-menu-item>
-        </router-link>
-        <router-link to="/borrow">
-          <el-menu-item index="2-3">借阅管理</el-menu-item>
-        </router-link>
-        <router-link to="/reservation">
-          <el-menu-item index="2-4">预约管理</el-menu-item>
-        </router-link>
+          <el-menu-item index="">图书分类</el-menu-item>             <!-- 还没写视图-->
+          <el-menu-item index="/manager/book">图书信息</el-menu-item>
+          <el-menu-item index="/manager/notification">通知管理</el-menu-item>
+          <el-menu-item index="/manager/borrow">借阅管理</el-menu-item>
+          <el-menu-item index="/manager/reservation">预约管理</el-menu-item>
       </el-sub-menu>
-
 
       <el-sub-menu index="3">
         <template #title>
-          <el-icon><UserFilled /></el-icon>
+          <el-icon><User /></el-icon>
           用户管理
         </template>
-
-        <router-link to="/administration">
-          <el-menu-item index="3-1">管理员信息</el-menu-item>
-        </router-link>
-
-        <router-link to="/user">
-          <el-menu-item index="3-2">用户信息</el-menu-item>
-        </router-link>
-
+          <el-menu-item index="/manager/administration">管理员信息</el-menu-item>
+          <el-menu-item index="/manager/user">普通用户信息</el-menu-item>
       </el-sub-menu>
+      <el-menu-item index="/login">
+        <el-icon><SwitchButton /></el-icon>
+        退出登录
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
 
-<script>
+<script setup>
 import {
-  Menu,
-  UserFilled
+  DataAnalysis,
+  House, Memo, SwitchButton,
+
 } from '@element-plus/icons-vue'
-export default {
-  name: "Aside",
-  components: {UserFilled, Menu}
-}
+import router from "@/router";
+
+const componentName ="Aside";
+
 </script>
 
 
 <style>
-
+.el-menu .is-active {
+  background-color: #e6ecf7 !important;
+}
 </style>

@@ -9,11 +9,13 @@ body {
     margin: 0;
     padding: 0;
 }
-.el-dropdown-link {
-    font-size: 20px; /* 增大字体大小 */
-    color: #333; /* 设置字体颜色 */
-    margin-right: 30px; /* 设置“tom”与右边界的距离为20像素 */
+.card {
+    background-color: white;
+    padding:8px;
+    border-radius: 5px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.12);
 }
+
 .el-dropdown-link:hover {
     cursor: pointer; /* 鼠标悬停时显示手型指针 */
 }
