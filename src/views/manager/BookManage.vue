@@ -18,11 +18,17 @@
     <div class="card" style="margin-bottom: 5px;height:600px">
       <!--表格区域开始-->
       <el-table :data="tableData" border stripe style="width: 100%">
-        <el-table-column sortable prop="publishDate" label="出版日期"></el-table-column>
-        <el-table-column prop="name" label="书名"></el-table-column>
+        <el-table-column prop="bookId" label="ID" sortable></el-table-column>
+        <el-table-column prop="isbn" label="图书编号"></el-table-column>
+        <el-table-column prop="categoryId" label="图书分类ID"></el-table-column>
+        <el-table-column prop="title" label="书名"></el-table-column>
         <el-table-column prop="author" label="作者"></el-table-column>
-        <el-table-column prop="isbn" label="ISBN"></el-table-column>
         <el-table-column prop="publisher" label="出版社"></el-table-column>
+        <el-table-column prop="publishDate" label="出版时间"></el-table-column>
+        <el-table-column prop="introduction" label="简介"></el-table-column>
+        <el-table-column prop="price" label="价格"></el-table-column>
+        <el-table-column prop="coverPic" label="图书封面"></el-table-column>
+        <el-table-column prop="borrowedCount" label="被借阅次数"></el-table-column>
         <el-table-column fixed="right" label="操作" width="100">
           <template #default="scope">
             <el-button @click="handleEdit(scope.row)" type="text">编辑</el-button>
@@ -80,9 +86,12 @@
 </template>
 
 <script setup>
-import { ref, reactive, toRefs } from 'vue';
+import {ref, reactive, toRefs, onMounted} from 'vue';
 import { ElDialog, ElForm, ElFormItem, ElInput, ElButton, ElTable, ElTableColumn, ElDatePicker } from 'element-plus';
 import { Search } from "@element-plus/icons-vue";
+import request from "@/utils/request"
+
+
 
 // 使用 reactive 创建响应式数据对象
 const data = reactive({
@@ -93,23 +102,6 @@ const data = reactive({
   pageSize: 10,
   total: 47,
   tableData: [
-    {"name": "追风筝的人", "author": "卡勒德·胡赛尼", "publishDate": "2003-05-29", "isbn": "978-0-553-80153-2", "publisher": "上海人民出版社"
-    },
-    {"name": "解忧杂货店", "author": "东野圭吾", "publishDate": "2009-09-03", "isbn": "978-7-5442-6348-4", "publisher": "南海出版公司"
-    },
-    {"name": "百年孤独", "author": "加西亚·马尔克斯", "publishDate": "1967-05-30", "isbn": "978-0-374-52850-2", "publisher": "南海出版公司"
-    },
-    {"name": "霍乱时期的爱情", "author": "加西亚·马尔克斯", "publishDate": "1985-04-05", "isbn": "978-0-374-52851-9", "publisher": "南海出版公司"
-    },
-    {"name": "挪威的森林", "author": "村上春树", "publishDate": "1987-04-04", "isbn": "978-4-06-149339-0", "publisher": "讲谈社"
-    },
-    {"name": "围城", "author": "钱钟书", "publishDate": "1947-03-10", "isbn": "978-7-02-003600-8", "publisher": "人民文学出版社"
-    },{"name": "三体", "author": "刘慈欣", "publishDate": "2008-05-01", "isbn": "978-7-229-00301-1", "publisher": "重庆出版社"
-    },{"name": "1984", "author": "乔治·奥威尔", "publishDate": "1949-06-08", "isbn": "978-0-14-118280-4", "publisher": "Secker & Warburg"
-    },
-    {"name": "动物农场", "author": "乔治·奥威尔", "publishDate": "1945-08-17", "isbn": "978-0-14-043784-3", "publisher": "Viking Press"
-    }
-
   ],
 
   bookForm: { // 绑定到表单的数据
@@ -123,6 +115,15 @@ const data = reactive({
 
 // 将 reactive 对象的属性转化为 refs，以便在模板中使用
 const { search, tableData, dialogVisible, bookForm, formLabelWidth } = toRefs(data);
+
+
+// 显示家居信息
+const list = () => {
+  request.get("/api/booksList").then(res =>{
+    console.log("res= ", res)
+    data.tableData = res.data;
+  })
+}
 
 // 设置对话框为可见
 const openAddBookDialog = () => {
@@ -165,6 +166,7 @@ const resetForm = () => {
     publisher: ''
   };
 };
+onMounted(list)
 </script>
 
 <style>
