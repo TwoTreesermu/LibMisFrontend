@@ -18,7 +18,7 @@
     <div class="card" style="margin-bottom: 5px;height:600px">
       <!--表格区域开始-->
       <el-table :data="tableData" border stripe style="width: 100%">
-        <el-table-column prop="bookId" label="ID" sortable></el-table-column>
+        <el-table-column prop="bookId" label="ID"  sortable></el-table-column>
         <el-table-column prop="isbn" label="ISBN"></el-table-column>
         <el-table-column prop="categoryId" label="图书类别ID"></el-table-column>
         <el-table-column prop="title" label="书名"></el-table-column>
@@ -64,8 +64,8 @@
         title="新增/编辑图书"
         v-model="dialogVisible"
         width="80%" height="80%"
-        @close="resetForm">
-      <el-form :model="bookForm">
+        @close="resetForm" >
+      <el-form ref="formRef" :model="bookForm" :rules="data.rules" >
         <el-form-item label="ISBN" >
           <el-input v-model="bookForm.isbn" style="width: 80%"></el-input>
         </el-form-item>
@@ -85,7 +85,6 @@
           <el-date-picker v-model="bookForm.publishDate" type="date" value-format="YYYY-MM-DD" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="简 介">
-          <!--<el-textarea v-model="bookForm.introduction" style="width: 80%" :rows="4"></el-textarea>-->
           <el-input
               v-model="bookForm.introduction" style="width: 80%" :rows="5" type="textarea"/>
         </el-form-item>
@@ -112,9 +111,12 @@
 
 <script setup>
 import {ref, reactive, toRefs, onMounted} from 'vue';
-import { ElDialog, ElForm, ElFormItem, ElInput, ElButton, ElTable, ElTableColumn, ElDatePicker } from 'element-plus';
+import { ElDialog, ElForm, ElFormItem, ElInput, ElButton, ElTable, ElTableColumn, ElDatePicker, ElMessage } from 'element-plus';
+
 import { Search } from "@element-plus/icons-vue";
 import request from "@/utils/request"
+
+
 
 //  ----------------------------- data -----------------------------
 // 使用 reactive 创建响应式数据对象
@@ -125,6 +127,37 @@ const data = reactive({
   pageSize: 5,
   total: 10,
   tableData: [], // 表格数据
+  rules: { // 表格校验规则
+    isbn: [
+      {required: true,message:"请填写ISBN",trigger:"blur"}
+    ],
+    categoryId: [
+      {required:true, message: "请填写图书类别ID",trigger:"blur"}
+    ],
+    title: [
+      {required:true, message: "请填写书名",trigger:"blur"}
+    ],
+    author: [
+      {required:true, message: "请填写图书作者",trigger:"blur"}
+    ],
+    publisher: [
+      {required:true, message: "请填写出版社",trigger:"blur"}
+    ],
+    publishDate: [
+      {required:true, message: "请填写出版日期",trigger:"blur"}
+    ],
+    introduction: [
+      {required:true, message: "请填写图书简介",trigger:"blur"}
+    ],
+    price:[
+      {required: true, message: "请填写价格", trigger:"blur"},
+      {pattern: /^(([1-9]\d*)|(0))|(\.\d+)?$/, message: "请输入数字", trigger: "blur"}
+    ],
+    borrowedCount: [
+      {required:true, message:"请填写被借阅次数", trigger:"blur"},
+      {pattern:/^(([1-9]\d*)|(0))$/, message:"请输入数字", trigger:"blur"}
+    ],
+  },
   bookForm: {  // 绑定到表单的数据
     // isbn: '',
     // categoryId: '',
@@ -139,8 +172,10 @@ const data = reactive({
   },
 });
 
+const formRef = ref()
+
 // 将 reactive 对象的属性转化为 refs，以便在模板中使用
-const { search, tableData, dialogVisible, bookForm, } = toRefs(data);
+const { search, tableData, dialogVisible, bookForm, rules } = toRefs(data);
 
 //  ----------------------------- method -----------------------------
 // 响应页数变化
@@ -156,116 +191,127 @@ const handleCurrentChange = (pageNum) => {
 
 // 显示家居信息
 const list = () => {
-  request.get("/api/booksList").then(res =>{
+  console.log("刷新列表发送请求前...")
+  request.get("/api/books/booksList").then(res =>{
     console.log("res= ", res)
     data.tableData = res.data;
   })
+
+  // 分页查询,显示
 
 }
 
 // 设置对话框为可见
 const openAddBookDialog = () => {
   data.dialogVisible = true;
-
 };
 
 // 编辑图书信息
 const handleEdit = (row) => {
     console.log("handleEdit, row = ", row.bookId);
     // 根据id到数据库查找数据
-
-  // request.get("/api/find/" + row.id).then(  // 找到就进行修改
-  //     res => {
-  //       if (res.code == 200) {
-  //         console.log("res.data = ",res.data);
-  //         data.tableData = res.data;
-  //         data.dialogVisible = true;
-  //       }
-  //     }
-  // )
+    request.get("/api/books/find/" + row.bookId).then(  // 找到就进行修改
+        res => {
+          if (res.code == 200) {
+            data.bookForm = res.data;
+            data.dialogVisible = true;
+          }
+        }
+    )
 };
 
 // 删除图书
 const handleDelete = (row) => {
   console.log("row = ", row.bookId);
-  // request.delete("/api/del/" + row.bookId).then(
-  //     res =>{
-  //   if (res.code === 200) {
-  //     this.$message({
-  //       type:"success",
-  //       message:"删除成功"
-  //     })
-  //   } else {
-  //     this.$message({
-  //       type: "error",
-  //       message:res.msg
-  //     })
-  //
-  //   }
-  //   // 刷新列表
-  //   list();
-  // })
+  request.delete("/api/books/del/" + row.bookId).then(
+      res =>{
+        console.log("res.delete = ", res);
+        console.log("res.code =", res.code);
+        if (res.code == 200) {
+          console.log("hello01")
+          ElMessage({
+            type:"success",
+            message:"删除成功"
+          })
+        } else {
+          console.log("hello02~~")
+          ElMessage({
+            type: "error",
+            message:res.msg
+          })
+        }
+        // 刷新列表
+        list();
+  })
 };
 
 // 将新图书添加到 tableData 中
 // 或者编辑图书
 const save = () => {
   if (data.bookForm.bookId) {  // 修改图书信息
-    alert("修改成功~~")
-    // request.put("/api/update", data.bookForm).then(
-    //     res => {
-    //       if (res.code === "200") {
-    //         // 提示成功
-    //         this.$message({
-    //           type: "success",
-    //           message: "更新成功"
-    //         })
-    //       } else {
-    //         this.$message({
-    //           type: "error",
-    //           // message: res.msg
-    //           message: "更新失败"
-    //         })
-    //       }
-    //       // 清空表单
-    //       resetForm();
-    //       // 关闭弹出框
-    //       data.dialogVisible = false;
-    //       // 刷新列表
-    //       list();
-    //     }
-    // )
+    // alert("修改成功~~")
+    request.put("/api/books/update", data.bookForm).then(
+        res => {
+          if (res.code === "200") {
+            // 提示成功
+            ElMessage({
+              type: "success",
+              message: "更新成功"
+            })
+          } else {
+            // 提示失败
+            ElMessage({
+              type: "error",
+              // message: res.msg
+              message: "更新失败"
+            })
+          }
+          resetForm(); // 清空表单
+          data.dialogVisible = false; // 关闭弹出框
+          list(); // 刷新列表
+        }
+    )
   } else {  // 添加图书信息
-    alert("添加成功~~");
-    // 清空表单
+    // alert("添加成功~~");
+    formRef.value.validate((valid) => {
+      if (valid) {
+        // alert("通过验证");
+        request.post("/api/books/save", data.bookForm).then(
+            res => {
+              console.log("res=", res)
+              if (res.code == 200) {
+                ElMessage({
+                  type: "success",
+                  message: "添加成功!"
+                })
+              } else {
+                ElMessage({
+                  type: "error",
+                  message: "更新失败"
+                })
+              }
+              resetForm(); // 清空表单
+              data.dialogVisible = false; // 关闭弹出框
+              list();  // 刷新列表
+            }
+        )
+      } else {
+        ElMessage({ // 弹出更新失败信息
+          type: "error",
+          message:"验证失败，不提交"
+        })
+        return false
+      }
+    })
 
-    // request.post("/api/save", data.bookForm).then(
-    //     res => {
-    //       console.log("res=", res)
-    //
-    //       // 清空表单
-    //       resetForm();
-    //       // 关闭弹出框
-    //       data.dialogVisible = false;
-    //       // 刷新列表
-    //       list();
-    //     }
-    // )
+
   }
-  // 测试代码开始
-  resetForm();
-  // 关闭弹出框
-  data.dialogVisible = false;
-  // 刷新列表
-  list();
-  //测试代码结束
 };
 
 // 清空表单
 const resetForm = () => {
   data.bookForm = {};
 };
-
 
 onMounted(list)
 
