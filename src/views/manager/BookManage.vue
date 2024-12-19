@@ -225,6 +225,7 @@ const list = () => {
       search: data.search
     }
   }).then(res => {
+    console.log("res", res)
     // 绑定tableData, 显示在表格
     data.tableData = res.data.records
     data.total = res.data.total;
