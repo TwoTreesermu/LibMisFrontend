@@ -24,15 +24,12 @@
         </el-table-column>
       </el-table>
       <!--表格区域结束-->
-      <!--@TableId(type = IdType.AUTO) // 主键类型是自增长-->
-      <!--private int categoryId;  // 分类ID-->
-      <!--private String categoryName;  // 分类名称-->
     </div>
 
     <!--对话框组件开始-->
     <el-dialog title="新增/编辑图书类别"
                v-model="data.dialogVisible"
-               width="80%" height="80%"
+               width="500px" height="80%"
                @close="resetForm" >
       <el-form :model="data.bookCategoryForm">
         <!--<el-form-item label="类别ID" >-->
@@ -67,8 +64,8 @@ import request from "@/utils/request";
 const data = reactive({
   dialogVisible: false, // 控制弹出框显示
   tableData:[
-    {categoryId: 1, categoryName:"小说"},
-    {categoryId: 2, categoryName:"文学"},
+    // {categoryId: 1, categoryName:"小说"},
+    // {categoryId: 2, categoryName:"文学"},
   ],
   bookCategoryForm:{},
 
@@ -83,104 +80,105 @@ const openAddBookDialog = () => {
 
 // 显示图书分类信息
 const list = () => {
-  alert("刷新列表发送请求前...")
-  // request.get("/api/bookCategory/categoryList").then(res =>{
-  //   console.log("res= ", res)
-  //   data.tableData = res.data;
-  // })
+  // alert("刷新列表发送请求前...")
+  request.get("/api/bookCategory/categoryList").then(res =>{
+    console.log("res= ", res)
+    data.tableData = res.data;
+  })
 }
 
 // 将新的图书类别添加到 tableData 中
 // 或者编辑图书类别
 const save = () => {
-  alert("添加图书类别");
   if (data.bookCategoryForm.categoryId) {  // 修改图书分类信息
-    alert("修改成功~~")
-    // request.put("/api/bookCategory/update", data.bookCategoryForm).then(
-    //     res => {
-    //       if (res.code === "200") {
-    //         // 提示成功
-    //         ElMessage({
-    //           type: "success",
-    //           message: "编辑成功"
-    //         })
-    //       } else {
-    //         // 提示失败
-    //         ElMessage({
-    //           type: "error",
-    //           // message: res.msg
-    //           message: "编辑失败"
-    //         })
-    //       }
-    //       resetForm(); // 清空表单
-    //       data.dialogVisible = false; // 关闭弹出框
-    //       list(); // 刷新列表
-    //     }
-    // )
+    // alert("修改成功~~")
+    request.put("/api/bookCategory/update", data.bookCategoryForm).then(
+        res => {
+          console.log("res=", res);
+          if (res.code === "200") {
+            // 提示成功
+            ElMessage({
+              type: "success",
+              message: "编辑成功"
+            })
+          } else {
+            // 提示失败
+            ElMessage({
+              type: "error",
+              // message: res.msg
+              message: "编辑失败"
+            })
+          }
+          resetForm(); // 清空表单
+          data.dialogVisible = false; // 关闭弹出框
+          list(); // 刷新列表
+        }
+    )
   } else {  // 添加图书分类信息
-    alert("添加成功~~");
-    // request.post("/api/bookCategory/save", data.bookCategoryForm).then(
-    //     res => {
-    //       console.log("res=", res)
-    //       if (res.code == 200) {
-    //         ElMessage({
-    //           type: "success",
-    //           message: "添加成功!"
-    //         })
-    //       } else {
-    //         ElMessage({
-    //           type: "error",
-    //           message: "更新失败"
-    //         })
-    //       }
-    //       resetForm(); // 清空表单
-    //       data.dialogVisible = false; // 关闭弹出框
-    //       list();  // 刷新列表
-    //     })
+    // alert("添加成功~~");
+    request.post("/api/bookCategory/save", data.bookCategoryForm).then(
+        res => {
+          // console.log("res=", res)
+          if (res.code == 200) {
+            ElMessage({
+              type: "success",
+              message: "添加成功!"
+            })
+          } else {
+            ElMessage({
+              type: "error",
+              message: "添加失败"
+            })
+          }
+          resetForm(); // 清空表单
+          data.dialogVisible = false; // 关闭弹出框
+          list();  // 刷新列表
+        })
   }
 }
 
 
 // 编辑图书分类信息
 const handleEdit = (row) => {
-  alert("编辑按钮");
-  alert("handleEdit, row = " + row.categoryId);
+  // alert("编辑按钮");
+  // alert("handleEdit, row = " + row.categoryId);
   // 根据id到数据库查找数据
-  // request.get("/api/bookCategory/find/" + row.categoryId).then(  // 找到就进行修改
-  //     res => {
-  //       // console.log("handleEdit.res = ", res)
-  //       if (res.code == 200) {
-  //         data.bookForm = res.data;
-  //         data.dialogVisible = true;
-  //       }
-  //     }
-  // )
+  request.get("/api/bookCategory/find/" + row.categoryId).then(  // 找到就进行修改
+      res => {
+        // console.log("handleEdit.res = ", res)
+        if (res.code == 200) {
+          data.bookCategoryForm = res.data;
+          data.dialogVisible = true;
+        }
+      }
+  )
 };
 
 // 删除图书类别
 const handleDelete = (row) => {
-  alert("删除按钮")
+  // alert("删除按钮")
   // console.log("row = ", row.bookId);
-  // request.delete("/api/bookCategory/del/" + row.categoryId).then(
-  //     res =>{
-  //       console.log("res.delete = ", res);
-  //       console.log("res.code =", res.code);
-  //       if (res.code == 200) {
-  //         console.log("hello01")
-  //         ElMessage({
-  //           type:"success",
-  //           message:"删除成功"
-  //         })
-  //       } else {
-  //         console.log("hello02~~")
-  //         ElMessage({
-  //           type: "error",
-  //           message:res.msg
-  //         })
-  //       }
-  //       // 刷新列表
-  //       list();
-  //     })
+  request.delete("/api/bookCategory/del/" + row.categoryId).then(
+      res =>{
+        // console.log("res.delete = ", res);
+        // console.log("res.code =", res.code);
+        if (res.code === "200") {
+          console.log("hello01")
+          ElMessage({
+            type:"success",
+            message:"删除成功"
+          })
+        } else {
+          console.log("hello02~~")
+          ElMessage({
+            type: "error",
+            // message:res.msg
+            message: "删除失败"
+          })
+        }
+        // 刷新列表
+        list();
+      })
   };
 
 // 清空表单
