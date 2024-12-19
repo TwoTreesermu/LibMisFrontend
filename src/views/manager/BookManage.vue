@@ -4,18 +4,18 @@
     <div style="margin: 10px 0" class="card">
       <el-input v-model="search" :prefix-icon="Search" placeholder="请输入图书关键字" style="width:240px">
       </el-input>
-      <el-button style="margin-left: 10px" type="primary">查询</el-button>
+      <el-button style="margin-left: 10px" type="primary" @click="list" >查询</el-button>
     </div>
     <!--查询栏结束-->
     <!--操作栏开始-->
-    <div style="margin: 5px 0" class="card">
-    <el-button type="primary" @click="openAddBookDialog">新增</el-button>
+    <div style="margin: 10px 0"  class="card">
+      <el-button type="primary" @click="openAddBookDialog">新增</el-button>
       <el-button type="info">导入</el-button>
       <el-button type="success">导出</el-button>
     </div>
     <!--操作栏结束-->
 
-    <div class="card" style="margin-bottom: 5px;height:600px">
+    <div class="card" style="margin-bottom: 5px;">
       <!--表格区域开始-->
       <el-table :data="tableData" border stripe style="width: 100%">
         <el-table-column prop="bookId" label="ID"  sortable></el-table-column>
@@ -178,27 +178,60 @@ const formRef = ref()
 const { search, tableData, dialogVisible, bookForm, rules } = toRefs(data);
 
 //  ----------------------------- method -----------------------------
-// 响应页数变化
+// 响应 每页显示记录数 的变化
 const handlePageSizeChange  = (pageSize) => {
+  // console.log("pageSize---", pageSize)
   data.pageSize = pageSize;
   list();
 }
 
-const handleCurrentChange = (pageNum) => {
+const handleCurrentChange = (pageNum) => {  // pageNum 跳转页数
+  // console.log("pageNum---", pageNum)
   data.currentPage = pageNum;
   list();
 }
 
-// 显示家居信息
+// 显示图书信息
 const list = () => {
   console.log("刷新列表发送请求前...")
-  request.get("/api/books/booksList").then(res =>{
-    console.log("res= ", res)
-    data.tableData = res.data;
+  // request.get("/api/books/booksList").then(res =>{
+  //   console.log("res= ", res)
+  //   data.tableData = res.data;
+  // })
+
+  // 分页查询
+  // console.log("data.currentPage = ", data.currentPage);
+  // console.log("data.pageSize = ", data.pageSize);
+  // request.get("/api/books/booksByPage",{
+  //   params: {
+  //     pageNum: data.currentPage,
+  //     pageSize: data.pageSize
+  //   }
+  // }).then(res => {
+  //   //绑定tableData, 显示在表格
+  //   console.log("返回的res=", res);
+  //   console.log("res.data", res.data);
+  //   data.tableData = res.data.records;
+  //   console.log("res.data.total = ", res.data.total)
+  //   data.total = res.data.total;
+  // })
+
+  // 查询、检索, 分页显示图书信息
+  request.get("/api/books/BySearchPage", {
+    params: {
+      type: "book",   // 分页组件类型: book person
+      pageNum: data.currentPage,
+      pageSize: data.pageSize,
+      search: data.search
+    }
+  }).then(res => {
+    // 绑定tableData, 显示在表格
+    data.tableData = res.data.records
+    data.total = res.data.total;
+
+    // console.log("res.data", res.data);
+    // console.log("res.data.total = ", res.data.total)
   })
-
-  // 分页查询,显示
-
 }
 
 // 设置对话框为可见
@@ -208,10 +241,11 @@ const openAddBookDialog = () => {
 
 // 编辑图书信息
 const handleEdit = (row) => {
-    console.log("handleEdit, row = ", row.bookId);
+    // console.log("handleEdit, row = ", row.bookId);
     // 根据id到数据库查找数据
     request.get("/api/books/find/" + row.bookId).then(  // 找到就进行修改
         res => {
+          // console.log("handleEdit.res = ", res)
           if (res.code == 200) {
             data.bookForm = res.data;
             data.dialogVisible = true;
@@ -256,14 +290,14 @@ const save = () => {
             // 提示成功
             ElMessage({
               type: "success",
-              message: "更新成功"
+              message: "编辑成功"
             })
           } else {
             // 提示失败
             ElMessage({
               type: "error",
               // message: res.msg
-              message: "更新失败"
+              message: "编辑失败"
             })
           }
           resetForm(); // 清空表单
