@@ -21,7 +21,15 @@ const routes = [
   },
   {  // 用户页面
     path:"/user", name: "User", component: () => import("../views/User.vue"),
-    meta: {title: '用户首页'}
+    meta: {title: '用户首页'},
+    children: [
+      { // 用户可视化首页
+        path: "home", name: "Home", component: () => import("../views/user/Home.vue"),
+      },
+      { // 图书详情页
+        path: "bookDetail", name: "BookDetail", component: () => import("../views/user/BookDetail.vue"),
+      }
+    ]
   },
   { // 管理员页面
     path: '/manager', name: 'Manager', component: () => import("../views/Manager.vue"),
