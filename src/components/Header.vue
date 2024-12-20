@@ -20,7 +20,7 @@
     <div style="width: fit-content; display: flex; align-items: center; padding-right: 25px">
       <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" alt="" style="width: 40px;height: 40px"/>
       <el-dropdown style="padding-left: 20px">
-        <span class="el-dropdown-link" style="font-size: 20px; color: whitesmoke" >{{data.user.username}}</span>
+        <span class="el-dropdown-link" style="font-size: 20px; color: gold" >{{data.user.username}}</span>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item><router-link to="">个人信息</router-link></el-dropdown-item>

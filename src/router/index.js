@@ -21,7 +21,12 @@ const routes = [
   },
   {  // 用户页面
     path:"/user", name: "User", component: () => import("../views/User.vue"),
-    meta: {title: '用户首页'}
+    meta: {title: '用户首页'},
+    children: [
+      { // 用户可视化首页
+        path: "home", name: "Home", component: () => import("../views/user/Home.vue"),
+      }
+    ]
   },
   { // 管理员页面
     path: '/manager', name: 'Manager', component: () => import("../views/Manager.vue"),
@@ -29,6 +34,10 @@ const routes = [
     children: [
       { // 管理员可视化首页
         path: "homePage", name: "HomePage", component: () => import("../views/manager/HomePage.vue"),
+      },
+      {  // 图书分类
+        path: 'bookCategory', name: 'BookCategoryManage', component: () => import("../views/manager/BookCategoryManage.vue"),
+        meta: {title: '图书分类管理'}
       },
       {  // 图书信息
         path: 'book', name: 'BookManage', component: BookManage,

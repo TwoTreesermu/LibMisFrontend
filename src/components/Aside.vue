@@ -20,7 +20,7 @@
           <el-icon><Memo /></el-icon>
           信息管理
         </template>
-          <el-menu-item index="">图书分类</el-menu-item>             <!-- 还没写视图-->
+          <el-menu-item index="/manager/bookCategory">图书分类</el-menu-item>
           <el-menu-item index="/manager/book">图书信息</el-menu-item>
           <el-menu-item index="/manager/notification">通知管理</el-menu-item>
           <el-menu-item index="/manager/borrow">借阅管理</el-menu-item>
