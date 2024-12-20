@@ -18,10 +18,8 @@
             <a style="color: #333">{{ item.name }}</a>
           </el-col>
         </el-row>
-
       </div>
       <!-- 分类结束 -->
-
     </div>
   </div>
 
@@ -33,7 +31,6 @@
 <script setup>
 
 import Header from "@/components/Header.vue";
-
 const componentName = "User"
 
 import {reactive} from "vue";
