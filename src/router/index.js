@@ -4,7 +4,6 @@ import UserManage from "@/views/manager/UserManage.vue";
 import NotificationManage from "@/views/manager/NotificationManage.vue";
 import ReservationManage from "@/views/manager/ReservationManage.vue";
 import BorrowManage from "@/views/manager/BorrowManage.vue";
-import AdministratorManage from "@/views/manager/AdministratorManage.vue";
 
 
 const routes = [
