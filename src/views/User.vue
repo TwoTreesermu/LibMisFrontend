@@ -13,7 +13,7 @@
         </div>
         <el-row :gutter="10">
           <el-col :span="12" style="text-align: center; margin-bottom: 10px" v-for="item in data.categoryList" :key="item.categoryId">
-            <a style="color: #333; font-size: 14px" :href="'/front/search?categoryName=' + item.categoryName">{{ item.categoryName }}</a>
+            <a style="color: #333; font-size: 14px" :href="'/user/search?categoryName=' + item.categoryName">{{ item.categoryName }}</a>
           </el-col>
         </el-row>
       </div>
@@ -32,7 +32,7 @@
       <!-- 排行榜开始 -->
       <div style="width: 220px; padding: 20px; background-color: #f7f7f7; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1)">
         <div style="color: goldenrod; font-size: 20px; margin-bottom: 15px;">图书借阅排行榜</div>
-        <div @click="goPage('/front/bookDetail?id=' + item.bookId)" v-for="(item, index) in data.rankBookList" :key="item.bookId"
+        <div @click="goPage('/user/bookDetail?id=' + item.bookId)" v-for="(item, index) in data.rankBookList" :key="item.bookId"
              style="padding: 10px 0; cursor: pointer; border-bottom: 1px solid #ddd; transition: background-color 0.3s;">
           <div style="display: flex; gap: 10px" v-if="index === data.currentIndex">
             <div style="width: 10px; color: orangered; font-weight: bold">{{ index + 1 }}</div>
@@ -61,7 +61,7 @@
             <strong>新</strong>书上架
           </div>
           <el-row :gutter="20">
-            <el-col @click="goPage('front/bookDetail?id=' + item.bookId)" :span="6" v-for="item in data.newBookList" :key="item.bookId" style="margin-bottom: 20px; cursor: pointer">
+            <el-col @click="goPage('user/bookDetail?id=' + item.bookId)" :span="6" v-for="item in data.newBookList" :key="item.bookId" style="margin-bottom: 20px; cursor: pointer">
               <div class="book-box">
                 <img :src="item.coverPic" alt="" style="width: 100%; height: 250px; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.1)">
               </div>
@@ -81,7 +81,7 @@
             <strong>高赞</strong>书评
           </div>
           <div>
-            <div @click="goPage('front/commentDetail?id=' + item.commentId)" v-for="item in data.commentList" :key="item.commentId" style="margin-bottom: 15px; padding: 10px; background-color: #f7f7f7; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); cursor: pointer">
+            <div @click="goPage('user/commentDetail?id=' + item.commentId)" v-for="item in data.commentList" :key="item.commentId" style="margin-bottom: 15px; padding: 10px; background-color: #f7f7f7; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); cursor: pointer">
               <div style="font-size: 15px; color: #333" class="activity-item line2">{{ item.commentText }}</div>
               <div style="font-size: 12px; color: #888" class="line1">点赞数：{{ item.likes }}</div>
             </div>

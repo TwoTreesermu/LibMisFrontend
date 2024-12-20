@@ -25,6 +25,9 @@ const routes = [
     children: [
       { // 用户可视化首页
         path: "home", name: "Home", component: () => import("../views/user/Home.vue"),
+      },
+      { // 图书详情页
+        path: "bookDetail", name: "BookDetail", component: () => import("../views/user/BookDetail.vue"),
       }
     ]
   },
