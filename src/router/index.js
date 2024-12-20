@@ -62,10 +62,10 @@ const routes = [
         path: 'borrow', name: 'BorrowManage', component: BorrowManage,
         meta: {title: '借阅管理'}
       },
-      { // 管理员信息
-        path: 'administration', name: 'AdministrationManage', component: AdministratorManage,
-        meta: {title: '管理员信息'}
-      },
+      // { // 管理员信息
+      //   path: 'administration', name: 'AdministrationManage', component: AdministratorManage,
+      //   meta: {title: '管理员信息'}
+      // },
       { // 数据统计
         path: 'dataAnalysis', name: 'DataAnalysis', component: () => import("../views/manager/DataAnalysis.vue"),
 
