@@ -4,6 +4,7 @@ import UserManage from "@/views/manager/UserManage.vue";
 import NotificationManage from "@/views/manager/NotificationManage.vue";
 import ReservationManage from "@/views/manager/ReservationManage.vue";
 import BorrowManage from "@/views/manager/BorrowManage.vue";
+import SearchPage from "@/views/user/SearchPage.vue";
 
 
 const routes = [
@@ -33,6 +34,10 @@ const routes = [
   { // 图书评论页面
     path: "/user/bookComment/:commentId", name: "BookComment", component: () => import("../views/user/BookComment.vue"),
     meta: { title: '图书评论页面' },
+  },
+  { // 图书搜索页面'
+    path: '/user/search', name: 'Search', component: () => import("../views/user/SearchPage.vue"),
+    meta: { title: '图书搜索页面' }, props: route => ({ query: route.query.query })  // 将查询参数传递给组件
   },
   { // 管理员页面
     path: '/manager', name: 'Manager', component: () => import("../views/Manager.vue"),

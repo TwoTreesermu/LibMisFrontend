@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header />
+    <UserHeader />
   </div>
 
   <div class="main-content" style="margin-left: 120px; margin-right: 120px">
@@ -84,7 +84,9 @@
           <div>
             <div @click="goComment(item.commentId)" v-for="item in data.commentList" :key="item.commentId" style="margin-bottom: 15px; padding: 10px; background-color: #f7f7f7; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); cursor: pointer">
               <div style="font-size: 15px; color: #333" class="activity-item line2">{{ item.commentText }}</div>
-              <div style="font-size: 12px; color: #888" class="line1">点赞数：{{ item.likes }}</div>
+              <span style="font-size: 12px; color: #888; margin-right: 30px;" class="line1">点赞数：{{ item.likes }}</span>
+              <span style="font-size: 12px; color: #888; margin-right: 30px;" class="line1">图书名：{{ getBookName(item.bookId) }}</span>
+              <span style="font-size: 12px; color: #888; margin-right: 30px;" class="line1">发布者：{{ getUserName(item.userId) }}</span>
             </div>
           </div>
         </div>
@@ -103,7 +105,7 @@
 
 <script setup>
 
-import Header from "@/components/Header.vue";
+import UserHeader from "@/components/UserHeader.vue";
 import Footer from "@/components/Footer.vue";
 
 const componentName = "User"
@@ -123,7 +125,8 @@ const data = reactive( {
   currentIndex: 0, // 图书排行榜里高亮选中的序号
   newBookList: [],
   commentList: [],
-  bookList: []
+  BookList: [],  // 书籍列表
+  UserList: []   // 用户列表
 })
 
 // 查询分类信息
@@ -138,7 +141,10 @@ request.get('/api/bookCategory/categoryList')
 // 查询图书排行
 request.get('/api/books/booksList')
     .then(res => {
-      data.rankBookList = res.data.splice(0,5);
+      // 按借阅量（borrowedCount）降序排序，并取前五个图书
+      data.rankBookList = res.data
+          .sort((a, b) => b.borrowedCount - a.borrowedCount)  // 降序排序
+          .splice(0, 5);  // 取前五个
     })
     .catch(error => {
       console.error('获取图书列表失败', error);
@@ -146,17 +152,28 @@ request.get('/api/books/booksList')
 
 // 查询新书上架
 request.get('/api/books/booksList')
-    .then(res => {  //这里的新书上架，我理解为是按 bookId 降序排列的“新” or 按 publishDate 降序排列的新？
-      data.newBookList = res.data.splice(0,8)
+    .then(res => {
+      // 按 bookId 降序排序，并取前8个图书
+      data.newBookList = res.data
+          .sort((a, b) => b.bookId - a.bookId)  // 按 bookId 降序排序
+          .splice(0, 8);  // 取前8个
     })
     .catch(error => {
       console.error('获取图书列表失败', error);
     });
 
+
 // 查询高赞书评
-request.get('/api/comment/commentList')
-    .then(res => {  // 评论按点赞数降序排列
-      data.commentList = res.data.splice(0,8)
+request.get('/api/books/commentList')
+    .then(res => {
+      if (res.data && Array.isArray(res.data)) {
+        data.commentList = res.data
+            .sort((a, b) => b.likes - a.likes)
+            .splice(0, 5);
+      } else {
+        data.commentList = [];
+        console.error('返回数据格式错误');
+      }
     })
     .catch(error => {
       console.error('获取评论列表失败', error);
@@ -169,6 +186,15 @@ request.get('/api/books/booksList')
     })
     .catch(error => {
       console.error('获取图书列表失败', error);
+    });
+
+// 查询用户列表
+request.get('/api/users/usersList')
+    .then(res => {
+      data.UserList = res.data;
+    })
+    .catch(error => {
+      console.error('获取用户列表失败', error);
     });
 
 const changeIndex = (index) => {
@@ -192,6 +218,18 @@ const goBookDetail = (bookId) => {
 // goComment 方法接收 commentId 作为参数
 const goComment = (bookId) => {
   router.push({ name: 'BookComment', params: { commentId } });  // 使用路由的 name 跳转
+};
+
+// 获取图书名
+const getBookName = (bookId) => {
+  const book = data.BookList.find(b => b.bookId === bookId);
+  return book ? book.title : '未知书籍';
+};
+
+// 获取用户名
+const getUserName = (userId) => {
+  const user = data.UserList.find(u => u.userId === userId);
+  return user ? user.userName : '未知用户';
 };
 
 </script>

@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <Header />
+    <UserHeader />
   </div>
 
   <div>
@@ -102,18 +102,18 @@
       <div style="margin: 50px 0">
         <div>
           <div style="margin-bottom: 20px; font-size: 22px; font-weight: bold;">评论 {{}}</div>
+          <!-- 输入框及评论按钮 -->
           <div style="margin-bottom: 20px;">
             <div class="el-textarea">
-              <!-- input -->
-              <textarea
-                  v-model="commentText.text"
-                  class="el-textarea__inner"
-                  tabindex="0"
-                  autocomplete="off"
-                  placeholder="请输入评论"
-                  rows="2"
-                  style="min-height: 31px;">
-              </textarea>
+          <textarea
+              v-model="commentText.text"
+              class="el-textarea__inner"
+              tabindex="0"
+              autocomplete="off"
+              placeholder="请输入评论"
+              rows="2"
+              style="min-height: 31px;">
+          </textarea>
             </div>
             <div style="text-align: right; margin-top: 5px;">
               <el-button
@@ -123,6 +123,20 @@
               </el-button>
             </div>
           </div>
+
+          <!-- 他人评论展示 -->
+          <div>
+            <div style="margin-bottom: 20px; font-size: 18px; font-weight: bold;">他人评论：</div>
+<!--            <div v-if="comments.length > 0">-->
+<!--              <div v-for="(comment, index) in comments" :key="index" style="margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">-->
+<!--                <div style="font-weight: bold; color: #333;">{{ comment.user }}</div>-->
+<!--                <div>{{ comment.content }}</div>-->
+<!--                <div style="font-size: 12px; color: #999; margin-top: 5px;">{{ comment.date }}</div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div v-else style="color: #999;">暂无评论</div>-->
+          </div>
+
           <div>
             <!---->
           </div>
@@ -137,7 +151,7 @@
 import { reactive, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import request from '@/utils/request';
-import Header from "@/components/Header.vue";
+import UserHeader from "@/components/UserHeader.vue";
 import Footer from "@/components/Footer.vue";
 import { computed } from 'vue';
 import { format } from 'date-fns';
@@ -190,6 +204,8 @@ const borrowQuantity = reactive({
 const commentText = reactive({
   text: ''  // 用于存储用户输入的评论内容
 });
+
+
 
 // // 借阅功能
 // const borrowBook = () => {
