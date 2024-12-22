@@ -13,7 +13,8 @@
         </div>
         <el-row :gutter="10">
           <el-col :span="12" style="text-align: center; margin-bottom: 10px" v-for="item in data.categoryList" :key="item.categoryId">
-            <a style="color: #333; font-size: 14px" :href="'/user/search?categoryName=' + item.categoryName">{{ item.categoryName }}</a>
+            <!-- 使用 @click 绑定 goPage 方法，传入 item.categoryName -->
+            <a style="color: #333; font-size: 14px" @click="goCategory(item.categoryId)">{{ item.categoryName }}</a>
           </el-col>
         </el-row>
       </div>
@@ -32,7 +33,7 @@
       <!-- 排行榜开始 -->
       <div style="width: 220px; padding: 20px; background-color: #f7f7f7; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1)">
         <div style="color: goldenrod; font-size: 20px; margin-bottom: 15px;">图书借阅排行榜</div>
-        <div @click="goPage('/user/bookDetail?id=' + item.bookId)" v-for="(item, index) in data.rankBookList" :key="item.bookId"
+        <div @click="goBookDetail(item.bookId)" v-for="(item, index) in data.rankBookList" :key="item.bookId"
              style="padding: 10px 0; cursor: pointer; border-bottom: 1px solid #ddd; transition: background-color 0.3s;">
           <div style="display: flex; gap: 10px" v-if="index === data.currentIndex">
             <div style="width: 10px; color: orangered; font-weight: bold">{{ index + 1 }}</div>
@@ -61,7 +62,7 @@
             <strong>新</strong>书上架
           </div>
           <el-row :gutter="20">
-            <el-col @click="goPage('user/bookDetail?id=' + item.bookId)" :span="6" v-for="item in data.newBookList" :key="item.bookId" style="margin-bottom: 20px; cursor: pointer">
+            <el-col @click="goBookDetail(item.bookId)" :span="6" v-for="item in data.newBookList" :key="item.bookId" style="margin-bottom: 20px; cursor: pointer">
               <div class="book-box">
                 <img :src="item.coverPic" alt="" style="width: 100%; height: 250px; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.1)">
               </div>
@@ -81,7 +82,7 @@
             <strong>高赞</strong>书评
           </div>
           <div>
-            <div @click="goPage('user/commentDetail?id=' + item.commentId)" v-for="item in data.commentList" :key="item.commentId" style="margin-bottom: 15px; padding: 10px; background-color: #f7f7f7; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); cursor: pointer">
+            <div @click="goComment(item.commentId)" v-for="item in data.commentList" :key="item.commentId" style="margin-bottom: 15px; padding: 10px; background-color: #f7f7f7; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); cursor: pointer">
               <div style="font-size: 15px; color: #333" class="activity-item line2">{{ item.commentText }}</div>
               <div style="font-size: 12px; color: #888" class="line1">点赞数：{{ item.likes }}</div>
             </div>
@@ -119,36 +120,77 @@ const data = reactive( {
   rankBookList: [],
   currentIndex: 0, // 图书排行榜里高亮选中的序号
   newBookList: [],
-  commentList: []
+  commentList: [],
+  bookList: []
 })
 
 // 查询分类信息
-request.get('/api/bookCategory/categoryList').then(res => {
-  data.categoryList = res.data
-})
+request.get('/api/bookCategory/categoryList')
+    .then(res => {
+      data.categoryList = res.data;
+    })
+    .catch(error => {
+      console.error('获取分类列表失败', error);
+    });
 
 // 查询图书排行
-request.get('/api/books/booksList').then(res => {  //这个booksList后续需要替换成，后端提供的按借阅量降序排序后的list
-  data.rankBookList = res.data.splice(0,5)
-})
+request.get('/api/books/booksList')
+    .then(res => {
+      data.rankBookList = res.data.splice(0,5);
+    })
+    .catch(error => {
+      console.error('获取图书列表失败', error);
+    });
 
 // 查询新书上架
-request.get('/api/books/booksList').then(res => {  //这里的新书上架，我理解为是按 bookId 降序排列的“新” or 按 publishDate 降序排列的新？
-  data.newBookList = res.data.splice(0,8)
-})
+request.get('/api/books/booksList')
+    .then(res => {  //这里的新书上架，我理解为是按 bookId 降序排列的“新” or 按 publishDate 降序排列的新？
+      data.newBookList = res.data.splice(0,8)
+    })
+    .catch(error => {
+      console.error('获取图书列表失败', error);
+    });
 
 // 查询高赞书评
-request.get('/api/comment/commentList').then(res => {  // 评论按点赞数降序排列
-  data.newBookList = res.data.splice(0,8)
-})
+request.get('/api/comment/commentList')
+    .then(res => {  // 评论按点赞数降序排列
+      data.commentList = res.data.splice(0,8)
+    })
+    .catch(error => {
+      console.error('获取评论列表失败', error);
+    });
+
+// 查询图书列表
+request.get('/api/books/booksList')
+    .then(res => {
+      data.BookList = res.data;
+    })
+    .catch(error => {
+      console.error('获取图书列表失败', error);
+    });
 
 const changeIndex = (index) => {
   data.currentIndex = index
 }
 
-const goPage = (path) => {
-  location.href = path
-}
+import { useRouter } from 'vue-router';
+
+const router = useRouter();  // 获取路由实例
+
+// goCategory 方法接收 categoryId
+const goCategory = (categoryId) => {
+  router.push({ name: 'BookCategory', params: { categoryId } });  // 使用路由的 name 跳转
+};
+
+// goBookDetail 方法接收 bookId 作为参数
+const goBookDetail = (bookId) => {
+  router.push({ name: 'BookDetail', params: { bookId } });
+};
+
+// goComment 方法接收 commentId 作为参数
+const goComment = (bookId) => {
+  router.push({ name: 'BookComment', params: { commentId } });  // 使用路由的 name 跳转
+};
 
 </script>
 
