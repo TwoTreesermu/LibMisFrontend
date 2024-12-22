@@ -110,13 +110,15 @@ const componentName = "User"
 
 import {reactive} from "vue";
 import request from "@/utils/request";
-import img1 from '@/assets/imgs/1.jpg'
-import img2 from '@/assets/imgs/2.jpg'
-import img3 from '@/assets/imgs/3.jpg'
+import img1 from '@/assets/imgs/轮播图1.jpg'
+import img2 from '@/assets/imgs/轮播图2.jpg'
+import img3 from '@/assets/imgs/轮播图3.jpg'
+import img4 from '@/assets/imgs/轮播图4.jpg'
+import img5 from '@/assets/imgs/轮播图5.jpg'
 
 const data = reactive( {
   categoryList: [],
-  imgs: [img1, img2, img3],
+  imgs: [img1, img2, img3, img4, img5],
   rankBookList: [],
   currentIndex: 0, // 图书排行榜里高亮选中的序号
   newBookList: [],
