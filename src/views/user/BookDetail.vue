@@ -8,24 +8,15 @@
     <div style="width: 60%; margin: 10px auto">
       <div style="display: flex; gap: 20px">
         <img v-if="bookDetail.bookInfo" :src="bookDetail.bookInfo.coverPic" alt="图书封面" style="width: 300px; height: 350px;">
-<!--        <img-->
-<!--            v-if="bookDetail.bookInfo"-->
-<!--            style="width: 300px; height: 350px;"-->
-<!--            :src="bookDetail.bookInfo.coverPic"-->
-<!--            alt="图书封面"-->
-<!--        />-->
         <div style="flex: 1 1 0;">
-
           <!-- 图书标题 -->
           <div style="margin-bottom: 10px; font-size: 28px; font-weight: bold; text-align: justify">
             {{ bookDetail.bookInfo ? bookDetail.bookInfo.title : '加载中' }}
           </div>
-
           <!-- 图书简介 -->
           <div class="line3" style="margin-bottom: 10px; font-size: 16px; color: rgb(102, 102, 102); text-align: justify; line-height: 24px">
             {{ bookDetail.bookInfo ? bookDetail.bookInfo.introduction : '加载中' }}
           </div>
-
           <!-- 图书具体信息 -->
           <div style="margin-bottom: 10px; background-color: rgb(242, 242, 242); padding: 15px; border-radius: 5px; color: rgb(102, 102, 102);" >
             <div style="margin-bottom: 10px; display: flex">
@@ -127,14 +118,17 @@
           <!-- 他人评论展示 -->
           <div>
             <div style="margin-bottom: 20px; font-size: 18px; font-weight: bold;">他人评论：</div>
-<!--            <div v-if="comments.length > 0">-->
-<!--              <div v-for="(comment, index) in comments" :key="index" style="margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">-->
-<!--                <div style="font-weight: bold; color: #333;">{{ comment.user }}</div>-->
-<!--                <div>{{ comment.content }}</div>-->
-<!--                <div style="font-size: 12px; color: #999; margin-top: 5px;">{{ comment.date }}</div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--            <div v-else style="color: #999;">暂无评论</div>-->
+            <div v-if="comments.length > 0">
+              <div v-for="(comment, index) in comments" :key="index" style="margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+                <!-- 显示用户名 -->
+                <div v-if="comment.userId" style="font-weight: bold; color: #333;">
+                  {{ comment.userId }}
+                </div>
+                <div>{{ comment.commentText }}</div> <!-- 显示评论内容 -->
+                <div style="font-size: 12px; color: #999; margin-top: 5px;">{{ formatDate(comment.commentDate) }}</div> <!-- 显示评论时间 -->
+              </div>
+            </div>
+            <div v-else style="color: #999;">暂无评论</div> <!-- 如果没有评论，显示暂无评论 -->
           </div>
 
           <div>
@@ -165,6 +159,12 @@ const bookDetail = reactive({
   bookList: []  // 存储所有图书列表
 });
 
+const commentText = reactive({
+  text: '',  // 绑定的评论内容
+  UserList: [],  // 存储所有用户列表
+});
+const comments = reactive([]);
+
 // 请求图书列表并根据 bookId 获取对应的书籍信息
 onMounted(() => {
   // 请求所有图书列表
@@ -178,11 +178,22 @@ onMounted(() => {
       .catch(error => {
         console.error('获取图书列表失败', error);
       });
+
+  console.log('组件已挂载');
+  fetchComments(); // 调用 fetchComments
+
+  // 请求所有用户列表，存储为以 userId 为键的对象
+  request.get('/api/users/usersList')
+      .then(res => {
+        commentText.UserList = res.data.reduce((acc, user) => {
+          acc[user.userId] = user.name; // 将用户列表转换为以 userId 为键的对象
+          return acc;
+        }, {});
+      })
+      .catch(error => {
+        console.error('获取用户列表失败', error);
+      });
 });
-
-console.log('bookId from route:', route.params.bookId);
-console.log('bookList:', bookDetail.bookList);
-
 
 
 // 日期格式转换
@@ -200,33 +211,29 @@ const borrowQuantity = reactive({
   count: 1  // 初始借阅数量
 });
 
-// 评论内容
-const commentText = reactive({
-  text: ''  // 用于存储用户输入的评论内容
-});
-
-
-
-// // 借阅功能
-// const borrowBook = () => {
-//   if (borrowQuantity.count > 0 && borrowQuantity.count <= bookDetail.bookInfo.realQuantity) {
-//     // 调用借阅接口
-//     request.post('/api/borrow', {
-//       bookId: bookDetail.bookInfo.bookId,
-//       quantity: borrowQuantity.count
-//     })
-//         .then(response => {
-//           // 处理成功借阅后的逻辑
-//           alert('借阅成功');
-//         })
-//         .catch(error => {
-//           console.error('借阅失败', error);
-//           alert('借阅失败');
-//         });
-//   } else {
-//     alert('库存不足');
-//   }
-// };
+// 借阅功能
+const borrowBook = () => {
+  const book = {
+    bookId: bookDetail.bookInfo.bookId,
+    quantity: borrowQuantity.count  // 用户选择的借书数量
+  };
+// 调用后端的借阅接口
+  request.post('/api/books/borrowBook', book)
+      .then(response => {
+        console.log('Response from backend:', response);  // 打印后端响应
+        if (response.code === "200") {
+          // 借阅成功
+          alert('借阅成功');
+        } else {
+          // 显示后端返回的错误信息
+          alert(response.msg || '借阅失败');
+        }
+      })
+      .catch(error => {
+        console.error('借阅失败', error);
+        alert('借阅失败');
+      });
+};
 
 // // 预约功能
 // const reserveBook = () => {
@@ -243,28 +250,75 @@ const commentText = reactive({
 //         alert('预约失败');
 //       });
 // };
-//
-// // 提交评论
-// const submitComment = () => {
-//   if (commentText.text.trim() === '') {
-//     alert('评论内容不能为空');
-//     return;
-//   }
 
-//   // 调用评论接口
-//   request.post('/api/comments', {
-//     bookId: bookDetail.bookInfo.bookId,
-//     comment: commentText.text
-//   })
-//       .then(response => {
-//         alert('评论成功');
-//         commentText.text = '';  // 提交后清空评论框
-//       })
-//       .catch(error => {
-//         console.error('评论失败', error);
-//         alert('评论失败');
-//       });
-// };
+
+
+// 提交评论
+const submitComment = () => {
+  if (commentText.text.trim() === '') {
+    alert('评论内容不能为空');
+    return;
+  }
+
+  const commentData = {
+    bookId: bookDetail.bookInfo.bookId,
+    comment_text: commentText.text
+  };
+
+  request.post('/api/books/sendComment', commentData)
+      .then(response => {
+        if (response.code === "200") {
+          alert('评论成功');
+          commentText.text = '';  // 清空评论框
+          // 重新获取评论列表并更新页面（假设有评论接口）
+          fetchComments();
+        } else {
+          alert(response.msg || '评论失败');
+        }
+      })
+      .catch(error => {
+        console.error('评论失败', error);
+        alert('评论失败');
+      });
+};
+
+
+// 格式化日期为 yyyy-MM-dd hh:mm
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}`;  // 使用模板字符串
+};
+
+
+
+// 获取评论列表
+const fetchComments = () => {
+  const bookId = route.params.bookId;  // 获取当前图书的 ID（从路由中获取）
+
+  // 请求评论接口（假设返回所有评论）
+  request.get('/api/books/getComment')
+      .then(response => {
+        console.log('评论数据:', response);  // 打印返回的评论数据
+        if (response.code === "200") {
+          const allComments = response.data;
+          // 根据当前的 bookId 过滤出与当前图书相关的评论
+          const filteredComments = allComments.filter(comment => String(comment.bookId) === String(bookId));
+          comments.splice(0, comments.length, ...filteredComments);  // 使用 splice 直接更新 comments 数组
+          console.log('过滤后的评论数据:', filteredComments);  // 打印过滤后的评论数据
+        } else {
+          console.error('获取评论失败:', response.msg);
+        }
+      })
+      .catch(error => {
+        console.error('请求评论失败:', error);
+      });
+};
+
 
 
 </script>
