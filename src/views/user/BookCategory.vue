@@ -56,17 +56,27 @@ const data = reactive({
 // 请求图书分类列表并根据 categoryId 获取对应的 categoryName
 onMounted(() => {
   // 请求所有图书分类列表
-  request.get('/api/bookCategory/categoryList')
+  // request.get('/api/bookCategory/categoryList')
+  //     .then(res => {
+  //       data.categoryList = res.data;
+  //       const categoryId = Number(route.params.categoryId);  // 获取传递的 categoryId 并强制转换为数字
+  //       // 根据 categoryId 找到对应的 categoryName
+  //       const category = data.categoryList.find(book => book.categoryId === categoryId);
+  //       if (category) {
+  //         data.categoryName = category.categoryName;  // 获取并存储对应的 categoryName
+  //       } else {
+  //         console.warn('未找到对应的 categoryId');
+  //       }
+  //     })
+  //     .catch(error => {
+  //       console.error('获取图书分类列表失败', error);
+  //     });
+  request.get('/api/bookCategory/find/'+ categoryId)
       .then(res => {
         data.categoryList = res.data;
-        const categoryId = Number(route.params.categoryId);  // 获取传递的 categoryId 并强制转换为数字
-        // 根据 categoryId 找到对应的 categoryName
-        const category = data.categoryList.find(book => book.categoryId === categoryId);
-        if (category) {
-          data.categoryName = category.categoryName;  // 获取并存储对应的 categoryName
-        } else {
-          console.warn('未找到对应的 categoryId');
-        }
+        // console.log("res.data--", res.data);
+        // console.log("data.categoryList", res.data.categoryName)
+        data.categoryName = res.data.categoryName;
       })
       .catch(error => {
         console.error('获取图书分类列表失败', error);
