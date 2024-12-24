@@ -24,7 +24,7 @@
         <el-table-column prop="title" label="书名"></el-table-column>
         <el-table-column prop="author" label="作者"></el-table-column>
         <el-table-column prop="publisher" label="出版社"></el-table-column>
-        <el-table-column prop="publishDate" label="出版时间"></el-table-column>
+        <el-table-column prop="publishDate" label="出版时间" :formatter="formatDate"></el-table-column>
         <el-table-column prop="introduction" label="简介"></el-table-column>
         <el-table-column prop="price" label="价格"></el-table-column>
         <el-table-column prop="coverPic" label="图书封面"></el-table-column>
@@ -38,7 +38,7 @@
                 <el-button size="mini" type="text">删除</el-button>
               </template>
             </el-popconfirm>
-            <!--<el-button @click="handleDelete(scope.row.id)" type="text">删除</el-button>-->
+
           </template>
         </el-table-column>
       </el-table>
@@ -189,6 +189,17 @@ const handleCurrentChange = (pageNum) => {  // pageNum 跳转页数
   // console.log("pageNum---", pageNum)
   data.currentPage = pageNum;
   list();
+}
+
+const formatDate = (row, column, value) => {
+  if (!value) return '';
+
+  const date = new Date(value);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
 }
 
 // 显示图书信息
