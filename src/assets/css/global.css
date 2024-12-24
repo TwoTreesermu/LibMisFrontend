@@ -38,3 +38,12 @@ a {
     -webkit-line-clamp: 2; /* 超出2行省略 */
     overflow: hidden;
 }
+
+.line3 {
+    word-break: break-all;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3; /* 超出3行省略 */
+    overflow: hidden;
+}
