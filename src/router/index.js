@@ -35,6 +35,14 @@ const routes = [
     path: "/user/bookComment/:commentId", name: "BookComment", component: () => import("../views/user/BookComment.vue"),
     meta: { title: '图书评论页面' },
   },
+  { // 用户图书借阅页面
+    path: "/user/bookBorrow", name: "BookBorrow", component: () => import("../views/user/BookBorrow.vue"),
+    meta: { title: '用户图书借阅页面' },
+  },
+  { // 用户图书预约页面
+    path: "/user/bookReservation", name: "BookReservation", component: () => import("../views/user/BookReservation.vue"),
+    meta: { title: '用户图书预约页面' },
+  },
   { // 图书搜索页面'
     path: '/user/search', name: 'Search', component: () => import("../views/user/SearchPage.vue"),
     meta: { title: '图书搜索页面' }, props: route => ({ query: route.query.query })  // 将查询参数传递给组件

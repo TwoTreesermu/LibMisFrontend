@@ -43,6 +43,8 @@
         <span class="el-dropdown-link" style="font-size: 20px; color: gold" >{{data.user.username}}</span>
         <template #dropdown>
           <el-dropdown-menu>
+            <el-dropdown-item @click="goToBorrow">我的借阅</el-dropdown-item>
+            <el-dropdown-item @click="goToReservation">我的预约</el-dropdown-item>
             <el-dropdown-item><router-link to="">个人信息</router-link></el-dropdown-item>
             <el-dropdown-item><router-link to="">修改密码</router-link></el-dropdown-item>
             <el-dropdown-item><router-link to="/login">退出登录</router-link></el-dropdown-item>
@@ -78,6 +80,18 @@ const handleSearch = () => {
     alert("请输入有效的书名");
   }
 };
+
+
+// 跳转到用户图书借阅页面
+const goToBorrow = () => {
+  router.push("/user/bookBorrow");
+};
+
+// 跳转到用户图书预约页面
+const goToReservation = () => {
+  router.push("/user/bookReservation");
+};
+
 </script>
 
 <style scoped>
