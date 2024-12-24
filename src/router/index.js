@@ -25,7 +25,7 @@ const routes = [
   },
   { // 图书分类页面
     path: "/user/bookCategory/:categoryId", name: "BookCategory", component: () => import("../views/user/BookCategory.vue"),
-    meta: { title: '图书详情页面' },
+    meta: { title: '图书分类页面' },
   },
   { // 图书详情页面
     path: "/user/bookDetail/:bookId", name: "BookDetail", component: () => import("../views/user/BookDetail.vue"),

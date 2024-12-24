@@ -54,16 +54,16 @@
             借阅须知：借阅书籍如果出现破损需借阅者承担借书全部费用，默认可借阅30天， 逾期未归还图书会扣除信誉分，信誉分低于50无法借阅图书
           </div>
 
-          <!-- 借阅数量控制 -->
-          <div style="margin-bottom: 10px;">
-            <el-input-number
-                v-model="borrowQuantity.count"
-                :min="1"
-                :max="bookDetail.bookInfo ? bookDetail.bookInfo.realQuantity : 10"
-                label="借阅数量"
-                style="width: 120px; margin-right: 10px;">
-            </el-input-number>
-          </div>
+<!--          &lt;!&ndash; 借阅数量控制 &ndash;&gt;-->
+<!--          <div style="margin-bottom: 10px;">-->
+<!--            <el-input-number-->
+<!--                v-model="borrowQuantity.count"-->
+<!--                :min="1"-->
+<!--                :max="bookDetail.bookInfo ? bookDetail.bookInfo.realQuantity : 10"-->
+<!--                label="借阅数量"-->
+<!--                style="width: 120px; margin-right: 10px;">-->
+<!--            </el-input-number>-->
+<!--          </div>-->
 
           <!-- 借阅按钮 -->
           <button
@@ -71,8 +71,7 @@
               type="button"
               class="el-button el-button--danger"
               style="padding: 20px 40px;"
-              @click="borrowBook"
-              :disabled="borrowQuantity.count > (bookDetail.bookInfo ? bookDetail.bookInfo.realQuantity : 0)">
+              @click="borrowBook">
             <span>立即借阅</span>
           </button>
 
@@ -206,16 +205,14 @@ const formattedPublishDate = computed(() => {
   return format(new Date(publishDate), 'yyyy-MM-dd');
 });
 
-// 借阅数量控制
-const borrowQuantity = reactive({
-  count: 1  // 初始借阅数量
-});
+
+
 
 // 借阅功能
 const borrowBook = () => {
   const book = {
     bookId: bookDetail.bookInfo.bookId,
-    quantity: borrowQuantity.count  // 用户选择的借书数量
+    quantity: 1  // 用户选择的借书数量
   };
 // 调用后端的借阅接口
   request.post('/api/books/borrowBook', book)
@@ -238,7 +235,7 @@ const borrowBook = () => {
 // // 预约功能
 // const reserveBook = () => {
 //   // 调用预约接口
-//   request.post('/api/reserve', {
+//   request.post('/api/books/reserve', {
 //     bookId: bookDetail.bookInfo.bookId,
 //     quantity: borrowQuantity.count
 //   })
@@ -250,6 +247,30 @@ const borrowBook = () => {
 //         alert('预约失败');
 //       });
 // };
+
+// 预约功能
+const reserveBook = () => {
+  const book = {
+    bookId: bookDetail.bookInfo.bookId,
+    quantity: 1,  // 用户选择的借书数量
+  };
+// 调用后端的预约接口
+  request.post('/api/books/reserve', book)
+      .then(response => {
+        console.log('Response from backend:', response);  // 打印后端响应
+        if (response.code === "200") {
+          // 预约成功
+          alert('预约成功');
+        } else {
+          // 显示后端返回的错误信息
+          alert(response.msg || '预约失败');
+        }
+      })
+      .catch(error => {
+        console.error('预约失败', error);
+        alert('预约失败');
+      });
+};
 
 
 
