@@ -164,7 +164,7 @@ request.get('/api/books/booksList')
 
 
 // 查询高赞书评
-request.get('/api/books/getComment')
+request.get('/api/comment/getComment')
     .then(res => {
       if (res.data && Array.isArray(res.data)) {
         data.commentList = res.data
