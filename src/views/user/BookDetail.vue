@@ -54,16 +54,16 @@
             借阅须知：借阅书籍如果出现破损需借阅者承担借书全部费用，默认可借阅30天， 逾期未归还图书会扣除信誉分，信誉分低于50无法借阅图书
           </div>
 
-          <!-- 借阅数量控制 -->
-          <div style="margin-bottom: 10px;">
-            <el-input-number
-                v-model="borrowQuantity.count"
-                :min="1"
-                :max="bookDetail.bookInfo ? bookDetail.bookInfo.realQuantity : 10"
-                label="借阅数量"
-                style="width: 120px; margin-right: 10px;">
-            </el-input-number>
-          </div>
+<!--          &lt;!&ndash; 借阅数量控制 &ndash;&gt;-->
+<!--          <div style="margin-bottom: 10px;">-->
+<!--            <el-input-number-->
+<!--                v-model="borrowQuantity.count"-->
+<!--                :min="1"-->
+<!--                :max="bookDetail.bookInfo ? bookDetail.bookInfo.realQuantity : 10"-->
+<!--                label="借阅数量"-->
+<!--                style="width: 120px; margin-right: 10px;">-->
+<!--            </el-input-number>-->
+<!--          </div>-->
 
           <!-- 借阅按钮 -->
           <button
@@ -71,8 +71,7 @@
               type="button"
               class="el-button el-button--danger"
               style="padding: 20px 40px;"
-              @click="borrowBook"
-              :disabled="borrowQuantity.count > (bookDetail.bookInfo ? bookDetail.bookInfo.realQuantity : 0)">
+              @click="borrowBook">
             <span>立即借阅</span>
           </button>
 
@@ -206,23 +205,29 @@ const formattedPublishDate = computed(() => {
   return format(new Date(publishDate), 'yyyy-MM-dd');
 });
 
-// 借阅数量控制
-const borrowQuantity = reactive({
-  count: 1  // 初始借阅数量
-});
+
+
 
 // 借阅功能
+const borrowedBooks = new Set();  // 用于记录已借阅的书籍ID，Set自动去重
+
 const borrowBook = () => {
-  const book = {
-    bookId: bookDetail.bookInfo.bookId,
-    quantity: borrowQuantity.count  // 用户选择的借书数量
-  };
-// 调用后端的借阅接口
-  request.post('/api/books/borrowBook', book)
+  const bookId = bookDetail.bookInfo.bookId;  // 获取当前书籍的 bookId
+  const quantity = 1;  // 用户选择的借书数量
+
+  // 检查该书是否已经被借阅
+  if (borrowedBooks.has(bookId)) {
+    alert('您已经借阅过这本书，不能重复借阅！');
+    return;  // 如果已经借阅过，直接返回，不继续执行后续代码
+  }
+
+  // 调用后端的借阅接口，将 bookId 作为查询参数传递
+  request.post(`/api/borrow/borrowBook?bookId=${bookId}`)
       .then(response => {
         console.log('Response from backend:', response);  // 打印后端响应
         if (response.code === "200") {
-          // 借阅成功
+          // 借阅成功，记录已借阅的书籍
+          borrowedBooks.add(bookId);  // 将这本书添加到已借阅列表中
           alert('借阅成功');
         } else {
           // 显示后端返回的错误信息
@@ -235,21 +240,40 @@ const borrowBook = () => {
       });
 };
 
-// // 预约功能
-// const reserveBook = () => {
-//   // 调用预约接口
-//   request.post('/api/reserve', {
-//     bookId: bookDetail.bookInfo.bookId,
-//     quantity: borrowQuantity.count
-//   })
-//       .then(response => {
-//         alert('预约成功');
-//       })
-//       .catch(error => {
-//         console.error('预约失败', error);
-//         alert('预约失败');
-//       });
-// };
+
+// 预约功能
+const reservedBooks = new Set();  // 记录已预约的书籍ID，Set自动去重
+
+const reserveBook = () => {
+  const bookId = bookDetail.bookInfo.bookId;  // 获取当前书籍的 bookId
+  const quantity = 1;  // 用户选择的借书数量
+
+  // 检查该书是否已经被预约
+  if (reservedBooks.has(bookId)) {
+    alert('您已经预约过这本书，不能重复预约！');
+    return;  // 如果已经预约过，直接返回，不继续执行后续代码
+  }
+
+  // 调用后端的预约接口，将 bookId 作为查询参数传递
+  const book = { bookId, quantity };
+
+  request.post('/api/reservation/reserve', book)
+      .then(response => {
+        console.log('Response from backend:', response);  // 打印后端响应
+        if (response.code === "200") {
+          // 预约成功，记录已预约的书籍
+          reservedBooks.add(bookId);  // 将这本书添加到已预约列表中
+          alert('预约成功');
+        } else {
+          // 显示后端返回的错误信息
+          alert(response.msg || '预约失败');
+        }
+      })
+      .catch(error => {
+        console.error('预约失败', error);
+        alert('预约失败');
+      });
+};
 
 
 
@@ -265,7 +289,7 @@ const submitComment = () => {
     comment_text: commentText.text
   };
 
-  request.post('/api/books/sendComment', commentData)
+  request.post('/api/comment/sendComment', commentData)
       .then(response => {
         if (response.code === "200") {
           alert('评论成功');
@@ -301,7 +325,7 @@ const fetchComments = () => {
   const bookId = route.params.bookId;  // 获取当前图书的 ID（从路由中获取）
 
   // 请求评论接口（假设返回所有评论）
-  request.get('/api/books/getComment')
+  request.get('/api/comment/getComment')
       .then(response => {
         console.log('评论数据:', response);  // 打印返回的评论数据
         if (response.code === "200") {
