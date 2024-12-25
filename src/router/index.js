@@ -4,8 +4,6 @@ import UserManage from "@/views/manager/UserManage.vue";
 import NotificationManage from "@/views/manager/NotificationManage.vue";
 import ReservationManage from "@/views/manager/ReservationManage.vue";
 import BorrowManage from "@/views/manager/BorrowManage.vue";
-import SearchPage from "@/views/user/SearchPage.vue";
-
 
 const routes = [
   {
@@ -82,14 +80,6 @@ const routes = [
         path: 'borrow', name: 'BorrowManage', component: BorrowManage,
         meta: {title: '借阅管理'}
       },
-      // { // 管理员信息
-      //   path: 'administration', name: 'AdministrationManage', component: AdministratorManage,
-      //   meta: {title: '管理员信息'}
-      // },
-      { // 数据统计
-        path: 'dataAnalysis', name: 'DataAnalysis', component: () => import("../views/manager/DataAnalysis.vue"),
-
-      }
     ],
   },
   { // 404
