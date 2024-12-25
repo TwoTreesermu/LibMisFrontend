@@ -108,8 +108,6 @@
 import UserHeader from "@/components/UserHeader.vue";
 import Footer from "@/components/Footer.vue";
 
-const componentName = "User"
-
 import {reactive} from "vue";
 import request from "@/utils/request";
 import img1 from '@/assets/imgs/轮播图1.jpg'
@@ -233,10 +231,6 @@ const getUserName = (userId) => {
 };
 
 </script>
-
-
-
-
 
 <style scoped>
 a:hover {

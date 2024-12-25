@@ -22,7 +22,9 @@
       <el-table-column prop="phoneNumber" label="电话号码"></el-table-column>
       <el-table-column prop="emailAdd" label="电子邮件地址"></el-table-column>
       <el-table-column prop="userPwd" label="用户密码"></el-table-column>
-      <el-table-column prop="portrait" label="用户头像"></el-table-column>
+      <el-table-column prop="portrait" label="用户头像">
+        <!--<img style="width:40px"/>-->
+      </el-table-column>
       <el-table-column prop="role" label="用户角色" :formatter="formatRole" ></el-table-column>
       <el-table-column fixed="right" label="操作" width="120">
         <template #default="scope">
@@ -60,13 +62,6 @@
         @close="resetForm"
     >
       <el-form :model="userForm">
-        <!--private int userId;  // 用户ID-->
-        <!--private String userName;  // 用户名-->
-        <!--private String phoneNumber;  // 电话号码-->
-        <!--private String emailAdd;  // 电子邮件地址-->
-        <!--private String userPwd;  // 用户密码-->
-        <!--private String portrait;  // 用户头像-->
-        <!--private int role;  // 用户角色：1表示管理员，0表示普通用户-->
 
         <el-form-item label="用户名" >
           <el-input v-model="userForm.userName" style="width: 80%"></el-input>
@@ -81,7 +76,15 @@
           <el-input v-model="userForm.userPwd" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="用户头像" >
-          <el-input v-model="userForm.portrait" style="width: 80%"></el-input>
+          <el-upload
+              class="avatar-uploader"
+              action="https://localhost:9090/files/upload"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+          >
+            <img v-if="userForm.portrait" :src="userForm.portrait" class="avatar" />
+            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+          </el-upload>
         </el-form-item>
 
         <el-form-item label="用户角色" style="width: 80%" >
@@ -117,6 +120,15 @@ import {
 import {Search} from '@element-plus/icons-vue';
 import request from "@/utils/request";
 
+import { Plus } from '@element-plus/icons-vue'
+
+
+
+const handleAvatarSuccess = (res) => {
+  // console.log(res.data);
+  // data.userForm.portrait = res.data;
+
+}
 
 
 //  ----------------------------- data -----------------------------
@@ -185,7 +197,7 @@ const handleEdit = (row) => {
   request.get("/api/users/find/" + row.userId).then(  // 找到就进行修改
       res => {
         // console.log("handleEdit.res = ", res)
-        if (res.code == 200) {
+        if (res.code === "200") {
           data.userForm = res.data;
           data.addUserDialogVisible = true;
         }
@@ -279,4 +291,25 @@ onMounted(list)
 .dialog-footer {
   text-align: right;
 }
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  text-align: center;
+}
+
 </style>

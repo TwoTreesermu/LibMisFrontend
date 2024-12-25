@@ -205,28 +205,6 @@ const formatDate = (row, column, value) => {
 // 显示图书信息
 const list = () => {
   console.log("刷新列表发送请求前...")
-  // request.get("/api/books/booksList").then(res =>{
-  //   console.log("res= ", res)
-  //   data.tableData = res.data;
-  // })
-
-  // 分页查询
-  // console.log("data.currentPage = ", data.currentPage);
-  // console.log("data.pageSize = ", data.pageSize);
-  // request.get("/api/books/booksByPage",{
-  //   params: {
-  //     pageNum: data.currentPage,
-  //     pageSize: data.pageSize
-  //   }
-  // }).then(res => {
-  //   //绑定tableData, 显示在表格
-  //   console.log("返回的res=", res);
-  //   console.log("res.data", res.data);
-  //   data.tableData = res.data.records;
-  //   console.log("res.data.total = ", res.data.total)
-  //   data.total = res.data.total;
-  // })
-
   // 查询、检索, 分页显示图书信息
   request.get("/api/books/BySearchPage", {
     params: {
@@ -240,9 +218,6 @@ const list = () => {
     // 绑定tableData, 显示在表格
     data.tableData = res.data.records
     data.total = res.data.total;
-
-    // console.log("res.data", res.data);
-    // console.log("res.data.total = ", res.data.total)
   })
 }
 
