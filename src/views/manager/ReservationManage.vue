@@ -102,7 +102,6 @@ import {
   ElTableColumn
 } from "element-plus";
 import {onMounted, reactive} from "vue";
-import request from "@/utils/request";
 
 //  ----------------------------- data -----------------------------
 // 使用 reactive 创建响应式数据对象
