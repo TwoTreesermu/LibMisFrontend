@@ -72,10 +72,10 @@
           background
           layout="prev, pager, next"
           :total="filteredReservations.length"
-      :page-size="pageSize"
-      :current-page="currentPage"
-      @current-change="handlePageChange"
-      class="custom-pagination"
+          :page-size="pageSize"
+          :current-page="currentPage"
+          @current-change="handlePageChange"
+          class="custom-pagination"
       />
     </div>
   </div>
@@ -253,5 +253,16 @@ export default {
 .custom-pagination {
   margin-top: 20px; /* 上方间距 */
   margin-bottom: 10px; /* 下方间距，可以调整分页条距离页面底部的距离 */
+}
+
+/* 页脚样式：固定在页面底部 */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f1f1f1;
+  padding: 10px;
+  text-align: center;
 }
 </style>

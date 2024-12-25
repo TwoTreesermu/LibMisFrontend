@@ -27,19 +27,19 @@
 
           <el-form :model="user" ref="userForm" label-width="120px">
             <el-form-item label="用户名">
-              <el-input v-model="user.username" disabled></el-input>
+              <el-input v-model="user.userName" disabled></el-input>
             </el-form-item>
 
             <el-form-item label="邮箱">
-              <el-input v-model="user.email"></el-input>
+              <el-input v-model="user.emailAdd"></el-input>
             </el-form-item>
 
             <el-form-item label="电话">
-              <el-input v-model="user.phone"></el-input>
+              <el-input v-model="user.phoneNumber"></el-input>
             </el-form-item>
 
-            <el-form-item label="地址">
-              <el-input v-model="user.address"></el-input>
+            <el-form-item label="密码">
+              <el-input v-model="user.userPwd"></el-input>
             </el-form-item>
 
             <el-form-item>
@@ -56,44 +56,89 @@
 </template>
 
 <script>
+import request from '@/utils/request';
 import UserHeader from "@/components/UserHeader.vue";
 import Footer from "@/components/Footer.vue";
 
 export default {
-  components: { Footer, UserHeader },
+  components: {Footer, UserHeader},
   data() {
     return {
       user: {
-        avatar: '', // 用户头像
-        username: '张三', // 用户名
-        email: 'zhangsan@example.com', // 邮箱
-        phone: '13800000000', // 电话
-        address: '北京市朝阳区' // 地址
-      }
+        userId: null,
+        userName: '',
+        phoneNumber: '',
+        emailAdd: '',
+        userPwd: '',
+        avatar: ''
+      },
     };
   },
+  created() {
+    // 获取用户信息
+    this.fetchUserInfo();
+  },
   methods: {
-    beforeUpload(file) {
-      const isImage = file.type.startsWith('image/');
-      if (!isImage) {
-        this.$message.error('只能上传图片文件');
+    // 获取用户信息
+    async fetchUserInfo() {
+      try {
+        // 假设userId是从某个地方获取的，可能是登录时存储在本地或者通过路由参数传递
+        const userId = this.$route.params.userId || 1;  // 这里默认使用1号用户，实际中应该从登录状态或者路由参数中获取
+        const response = await request.get(`/api/users/find/` + userId);
+        if (response.code === '200') {
+          this.user = response.data; // 成功时将返回的数据赋值给user
+          console.log('用户信息', this.user); // 打印出来以确认数据
+        } else {
+          this.$message.error('获取用户信息失败');
+        }
+      } catch (error) {
+        console.error('获取用户信息失败', error);
+        this.$message.error('获取用户信息失败');
       }
-      return isImage;
     },
+
+    // 更新用户信息
+    async saveChanges() {
+      try {
+        const response = await request.put('/api/users/update', this.user);
+        if (response.code === '200') {
+          this.$message.success('更新成功');
+        } else {
+          this.$message.error('更新失败');
+        }
+      } catch (error) {
+        console.error('更新用户信息失败', error);
+        this.$message.error('更新失败');
+      }
+    },
+
+    // 头像上传前检查
+    beforeUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isPNG = file.type === 'image/png';
+      const isSizeLimit = file.size / 1024 / 1024 < 5; // 限制5MB
+      if (!isJPG && !isPNG) {
+        this.$message.error('上传头像只能是 JPG/PNG 格式');
+      }
+      if (!isSizeLimit) {
+        this.$message.error('上传头像大小不能超过 5MB');
+      }
+      return (isJPG || isPNG) && isSizeLimit;
+    },
+
+    // 头像上传成功处理
     handleAvatarSuccess(response, file) {
-      // 头像上传成功后的逻辑，可以根据返回的 response 更新头像
       this.user.avatar = URL.createObjectURL(file.raw);
+      this.$message.success('头像上传成功');
     },
-    handleAvatarError() {
+
+    // 头像上传失败处理
+    handleAvatarError(error) {
       this.$message.error('头像上传失败');
-    },
-    saveChanges() {
-      // 在这里处理保存更改的逻辑（例如通过 API 保存）
-      this.$message.success('个人信息已保存');
-      console.log('保存的用户信息：', this.user);
     }
   }
 };
+
 </script>
 
 <style scoped>

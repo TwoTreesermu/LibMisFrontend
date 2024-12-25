@@ -46,8 +46,8 @@
         </div>
       </div>
 
-      <!-- 图书列表 -->
-      <el-table :data="paginatedBooks" style="width: 100%;" border>
+      <!-- 图书借阅记录 -->
+      <el-table :data="books" style="width: 100%;" border>
         <el-table-column label="书籍名称" prop="title"></el-table-column>
         <el-table-column label="借阅编号" prop="id"></el-table-column>
         <el-table-column label="借阅日期" prop="borrowDate"></el-table-column>
@@ -72,11 +72,11 @@
       <el-pagination
           background
           layout="prev, pager, next"
-          :total="filteredBooks.length"
+          :total="total"
           :page-size="pageSize"
           :current-page="currentPage"
           @current-change="handlePageChange"
-           class="custom-pagination"
+          class="custom-pagination"
       />
     </div>
   </div>
@@ -87,6 +87,7 @@
 <script>
 import UserHeader from "@/components/UserHeader.vue";
 import Footer from "@/components/Footer.vue";
+import axios from "axios";
 
 export default {
   components: {Footer, UserHeader},
@@ -94,13 +95,13 @@ export default {
     return {
       title: "用户图书借阅页面",
       books: [
-        { id: 1, title: "图书1", borrowDate: "2024-12-01", borrowDays: 10, dueDate: "2024-12-11", status: "借阅中" },
-        { id: 2, title: "图书2", borrowDate: "2024-12-05", borrowDays: 5, dueDate: "2024-12-10", status: "借阅中" },
-        { id: 3, title: "图书3", borrowDate: "2024-11-25", borrowDays: 15, dueDate: "2024-12-10", status: "已归还" },
-        { id: 4, title: "图书4", borrowDate: "2024-10-20", borrowDays: 20, dueDate: "2024-11-10", status: "借阅中" },
-        { id: 5, title: "图书5", borrowDate: "2024-09-15", borrowDays: 30, dueDate: "2024-10-15", status: "已归还" },
-        { id: 6, title: "图书6", borrowDate: "2024-07-10", borrowDays: 5, dueDate: "2024-07-15", status: "借阅中" },
-        { id: 7, title: "图书7", borrowDate: "2024-06-01", borrowDays: 12, dueDate: "2024-06-13", status: "已归还" },
+        {id: 1, title: "图书1", borrowDate: "2024-12-01", borrowDays: 10, dueDate: "2024-12-11", status: "借阅中"},
+        {id: 2, title: "图书2", borrowDate: "2024-12-05", borrowDays: 5, dueDate: "2024-12-10", status: "借阅中"},
+        {id: 3, title: "图书3", borrowDate: "2024-11-25", borrowDays: 15, dueDate: "2024-12-10", status: "已归还"},
+        {id: 4, title: "图书4", borrowDate: "2024-10-20", borrowDays: 20, dueDate: "2024-11-10", status: "借阅中"},
+        {id: 5, title: "图书5", borrowDate: "2024-09-15", borrowDays: 30, dueDate: "2024-10-15", status: "已归还"},
+        {id: 6, title: "图书6", borrowDate: "2024-07-10", borrowDays: 5, dueDate: "2024-07-15", status: "借阅中"},
+        {id: 7, title: "图书7", borrowDate: "2024-06-01", borrowDays: 12, dueDate: "2024-06-13", status: "已归还"},
       ],
       searchTitle: "",
       searchId: "",
@@ -152,7 +153,7 @@ export default {
       // this.fetchData(page, this.pageSize);
     }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -284,4 +285,14 @@ export default {
   font-size: 14px;
 }
 
+/* 页脚样式：固定在页面底部 */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f1f1f1;
+  padding: 10px;
+  text-align: center;
+}
 </style>

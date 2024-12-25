@@ -205,7 +205,16 @@ const formattedPublishDate = computed(() => {
   return format(new Date(publishDate), 'yyyy-MM-dd');
 });
 
-
+// 格式化日期为 yyyy-MM-dd hh:mm
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}`;  // 使用模板字符串
+};
 
 
 // 借阅功能
@@ -277,25 +286,62 @@ const reserveBook = () => {
 
 
 
-// 提交评论
+// // 提交评论
+// const submitComment = () => {
+//   if (commentText.text.trim() === '') {
+//     alert('评论内容不能为空');
+//     return;
+//   }
+//
+//   const commentData = {
+//     bookId: bookDetail.bookInfo.bookId,
+//     comment_text: commentText.text
+//   };
+//
+//   request.post('/api/comment/sendComment', commentData)
+//       .then(response => {
+//         if (response.code === "200") {
+//           alert('评论成功');
+//           commentText.text = '';  // 清空评论框
+//           // 重新获取评论列表并更新页面（假设有评论接口）
+//           fetchComments();
+//         } else {
+//           alert(response.msg || '评论失败');
+//         }
+//       })
+//       .catch(error => {
+//         console.error('评论失败', error);
+//         alert('评论失败');
+//       });
+// };
+
+
 const submitComment = () => {
+  // 检查评论内容是否为空
   if (commentText.text.trim() === '') {
     alert('评论内容不能为空');
     return;
   }
 
+  console.log('评论内容:', commentText.text);
+
+  // 构造评论数据
   const commentData = {
-    bookId: bookDetail.bookInfo.bookId,
-    comment_text: commentText.text
+    bookId: bookDetail.bookInfo.bookId,  // 当前书籍ID
+    comment_text: commentText.text,  // 评论内容
   };
 
+  console.log('构造评论数据:', commentData);
+
+  // 调用后端的评论接口，提交评论数据
   request.post('/api/comment/sendComment', commentData)
       .then(response => {
+        console.log('Response from backend:', response);
+
         if (response.code === "200") {
           alert('评论成功');
           commentText.text = '';  // 清空评论框
-          // 重新获取评论列表并更新页面（假设有评论接口）
-          fetchComments();
+          fetchComments();  // 重新加载评论列表
         } else {
           alert(response.msg || '评论失败');
         }
@@ -307,16 +353,7 @@ const submitComment = () => {
 };
 
 
-// 格式化日期为 yyyy-MM-dd hh:mm
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  return `${year}-${month}-${day} ${hours}:${minutes}`;  // 使用模板字符串
-};
+
 
 
 
@@ -348,5 +385,14 @@ const fetchComments = () => {
 </script>
 
 <style scoped>
-/* 你可以在这里添加样式 */
+/* 页脚样式：固定在页面底部 */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f1f1f1;
+  padding: 10px;
+  text-align: center;
+}
 </style>
