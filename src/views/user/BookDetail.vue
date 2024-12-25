@@ -54,16 +54,7 @@
             借阅须知：借阅书籍如果出现破损需借阅者承担借书全部费用，默认可借阅30天， 逾期未归还图书会扣除信誉分，信誉分低于50无法借阅图书
           </div>
 
-<!--          &lt;!&ndash; 借阅数量控制 &ndash;&gt;-->
-<!--          <div style="margin-bottom: 10px;">-->
-<!--            <el-input-number-->
-<!--                v-model="borrowQuantity.count"-->
-<!--                :min="1"-->
-<!--                :max="bookDetail.bookInfo ? bookDetail.bookInfo.realQuantity : 10"-->
-<!--                label="借阅数量"-->
-<!--                style="width: 120px; margin-right: 10px;">-->
-<!--            </el-input-number>-->
-<!--          </div>-->
+
 
           <!-- 借阅按钮 -->
           <button
