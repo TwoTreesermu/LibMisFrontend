@@ -1,8 +1,5 @@
 <template>
   <div class="app-container">
-    <!-- 用户头部 -->
-    <UserHeader />
-
     <!-- 个人信息部分 -->
     <div class="personal-info">
       <el-card class="info-card">
@@ -50,18 +47,46 @@
       </el-card>
     </div>
 
-    <!-- 页脚，固定在页面底部 -->
-    <Footer />
+    <!-- 用户借阅偏好部分 -->
+    <div class="borrow-preference">
+      <el-card class="info-card">
+        <div class="header">
+          <h2>用户借阅偏好</h2>
+        </div>
+        <div class="content">
+          <!-- 查看借阅偏好的按钮 -->
+          <el-button type="primary" @click="fetchBorrowPreferences">查看借阅偏好</el-button>
+
+          <!-- 弹出框显示借阅偏好分析结果 -->
+          <el-dialog :visible.sync="dialogVisible" title="借阅偏好分析结果">
+            <div v-if="borrowPreferences.length">
+              <el-list>
+                <el-list-item v-for="(preference, index) in borrowPreferences" :key="index">{{ preference }}</el-list-item>
+              </el-list>
+            </div>
+            <div v-else>
+              <p>未能获取借阅偏好数据。</p>
+            </div>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="dialogVisible = false">关闭</el-button>
+            </span>
+          </el-dialog>
+        </div>
+      </el-card>
+    </div>
+
   </div>
 </template>
 
 <script>
 import request from '@/utils/request';
-import UserHeader from "@/components/UserHeader.vue";
-import Footer from "@/components/Footer.vue";
+import axios from 'axios';
+
+
+
+
 
 export default {
-  components: {Footer, UserHeader},
   data() {
     return {
       user: {
@@ -72,6 +97,8 @@ export default {
         userPwd: '',
         avatar: ''
       },
+      borrowPreferences: [],  // 用于存储借阅偏好分析结果
+      dialogVisible: false,  // 控制显示借阅偏好分析结果的对话框
     };
   },
   created() {
@@ -97,6 +124,7 @@ export default {
       }
     },
 
+
     // 更新用户信息
     async saveChanges() {
       try {
@@ -111,6 +139,7 @@ export default {
         this.$message.error('更新失败');
       }
     },
+
 
     // 头像上传前检查
     beforeUpload(file) {
@@ -135,7 +164,41 @@ export default {
     // 头像上传失败处理
     handleAvatarError(error) {
       this.$message.error('头像上传失败');
+    },
+
+    // 借阅偏好分析
+    async fetchBorrowPreferences() {
+      // 从 localStorage 获取 token
+      // const token = localStorage.getItem('token');
+      const token = 'your-temp-token-here';
+
+      // 如果没有找到 token，提示用户未登录
+      if (!token) {
+        this.$message.error('未找到登录凭证');
+        return;
+      }
+
+      try {
+        // 调用借阅偏好的分析接口，传递 Authorization header
+        const response = await axios.get('/api/users/userStaticAnalysis', {
+          headers: {
+            'Authorization': `Bearer ${token}`  // 传递 token
+          }
+        });
+
+        // 如果接口返回数据，保存到 borrowPreferences 中，并显示对话框
+        if (response.data) {
+          this.borrowPreferences = response.data;
+          this.dialogVisible = true;  // 打开对话框显示分析结果
+        } else {
+          this.$message.error('未能获取借阅偏好数据');
+        }
+      } catch (error) {
+        console.error('Error fetching borrow preferences:', error);
+        this.$message.error('获取借阅偏好数据失败');
+      }
     }
+
   }
 };
 
@@ -146,25 +209,34 @@ export default {
 .app-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* 页面高度至少占满视口 */
+  min-height: 100vh;
+  padding-top: 10px;
 }
 
 /* 个人信息部分 */
 .personal-info {
-  flex: 1; /* 使内容部分占据剩余空间 */
   padding: 20px;
+  margin-bottom: 0; /* Remove any extra margin at the bottom */
 }
 
+/* 借阅偏好部分 */
+.borrow-preference {
+  margin-top: 0; /* Adjust the top margin for borrow-preference */
+}
+
+/* card 样式 */
 .info-card {
   max-width: 600px;
   margin: 0 auto;
 }
 
+/* 头部样式 */
 .header {
   text-align: center;
   margin-bottom: 20px;
 }
 
+/* 头像部分 */
 .avatar {
   text-align: center;
 }
@@ -192,14 +264,8 @@ export default {
   width: 100%;
 }
 
-/* 页脚样式：固定在页面底部 */
-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #f1f1f1;
-  padding: 10px;
-  text-align: center;
+/* Optional: Adjust dialog padding or other spacing if needed */
+.el-dialog__body {
+  padding: 20px;
 }
 </style>

@@ -5,6 +5,7 @@ import NotificationManage from "@/views/manager/NotificationManage.vue";
 import ReservationManage from "@/views/manager/ReservationManage.vue";
 import BorrowManage from "@/views/manager/BorrowManage.vue";
 
+
 const routes = [
   {
     path: "/", redirect: "/login",
@@ -80,6 +81,10 @@ const routes = [
         path: 'borrow', name: 'BorrowManage', component: BorrowManage,
         meta: {title: '借阅管理'}
       },
+      { // 个人信息
+        path: 'managerInfo', name: 'ManagerInfo', component: () => import( "../views/manager/ManagerInfo.vue"),
+        meta: {title: '个人信息'}
+      }
     ],
   },
   { // 404

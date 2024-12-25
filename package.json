@@ -13,6 +13,8 @@
     "date-fns": "^4.1.0",
     "echarts": "^5.5.1",
     "element-plus": "^2.9.0",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9",
     "vue": "^3.2.13",
     "vue-router": "^4.5.0",
     "vuex": "^4.0.0"
