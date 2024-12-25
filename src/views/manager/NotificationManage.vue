@@ -1,12 +1,6 @@
 <template>
   <div>
-    <!--查询栏开始-->
-    <!--<div style="margin: 10px 0" class="card">-->
-    <!--  <el-input v-model="search" :prefix-icon="Search" placeholder="请输入图书关键字" style="width:240px">-->
-    <!--  </el-input>-->
-    <!--  <el-button style="margin-left: 10px" type="primary" @click="list" >查询</el-button>-->
-    <!--</div>-->
-    <!--查询栏结束-->
+
     <!--操作栏开始-->
     <div style="margin: 10px 0"  class="card">
       <el-button type="primary" @click="openAddBookDialog">新增</el-button>
@@ -124,10 +118,7 @@ const data = reactive({
   total: 10,
   tableData: [], // 表格数据
   notificationForm: { // 绑定到表单的数据
-
   }
-
-
 })
 
 //  ----------------------------- method -----------------------------
@@ -194,7 +185,7 @@ const handleEdit = (row) => {
   )
 };
 
-// 删除图书
+// 删除通知
 const handleDelete = (row) => {
   // console.log("row = ", row.notificationId);
   request.delete("/api/notification/del/" + row.notificationId).then(
