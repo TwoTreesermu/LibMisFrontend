@@ -170,27 +170,26 @@ export default {
     async fetchBorrowPreferences() {
       // 从 localStorage 获取 token
       // const token = localStorage.getItem('token');
-      const token = 'your-temp-token-here';
-
-      // 如果没有找到 token，提示用户未登录
-      if (!token) {
-        this.$message.error('未找到登录凭证');
-        return;
-      }
+      // const token = 'your-temp-token-here';
+      //
+      // // 如果没有找到 token，提示用户未登录
+      // if (!token) {
+      //   this.$message.error('未找到登录凭证');
+      //   return;
+      // }
 
       try {
         // 调用借阅偏好的分析接口，传递 Authorization header
-        const response = await axios.get('/api/users/userStaticAnalysis', {
-          headers: {
-            'Authorization': `Bearer ${token}`  // 传递 token
-          }
-        });
+        console.log("checkPoint1.");
+        const response = await axios.get('/api/users/userStaticAnalysis');
 
         // 如果接口返回数据，保存到 borrowPreferences 中，并显示对话框
         if (response.data) {
+          console.log(response.data);
           this.borrowPreferences = response.data;
           this.dialogVisible = true;  // 打开对话框显示分析结果
         } else {
+          console.log("nth happen.");
           this.$message.error('未能获取借阅偏好数据');
         }
       } catch (error) {
