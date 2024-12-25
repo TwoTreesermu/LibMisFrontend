@@ -102,6 +102,7 @@ import {
   ElTableColumn
 } from "element-plus";
 import {onMounted, reactive} from "vue";
+import request from "@/utils/request";
 
 //  ----------------------------- data -----------------------------
 // 使用 reactive 创建响应式数据对象
@@ -149,108 +150,107 @@ const openAddBookDialog = () => {
 // 显示预约信息
 const list = () => {
   console.log("刷新列表发送请求前...")
-  // // 查询、检索, 分页显示图书信息
-  // request.get("/api/reservation/BySearchPage", {
-  //   params: {
-  //     type: "notification",   // 分页组件类型: book person
-  //     pageNum: data.currentPage,
-  //     pageSize: data.pageSize,
-  //   }
-  // }).then(res => {
-  //   console.log("notificationlist.res--", res)
-  //   // 绑定tableData, 显示在表格
-  //   console.log("res.data", res.data);
-  //   console.log("res.data.total = ", res.data.total)
-  //   data.tableData = res.data.records
-  //   data.total = res.data.total;
-  // })
+  // 查询、检索, 分页显示图书信息
+  request.get("/api/reservation/BySearchPage", {
+    params: {
+      pageNum: data.currentPage,
+      pageSize: data.pageSize,
+    }
+  }).then(res => {
+    console.log("reservation111.res--", res)
+    // 绑定tableData, 显示在表格
+    console.log("res.data", res.data);
+    console.log("res.data.total = ", res.data.total)
+    data.tableData = res.data.records
+    data.total = res.data.total;
+  })
 }
 
 // 编辑预约信息
 const handleEdit = (row) => {
-  alert("编辑按钮")
-  // console.log("handleEdit, row = ", row.notificationId);
-  // // 根据id到数据库查找数据
-  // request.get("/api/notification/find/" + row.notificationId).then(  // 找到就进行修改
-  //     res => {
-  //       // console.log("handleEdit.res = ", res)
-  //       if (res.code === "200") {
-  //         data.notificationForm = res.data;
-  //         data.dialogVisible = true;
-  //       }
-  //     }
-  // )
+  // alert("编辑按钮")
+  console.log("handleEdit, row = ", row.reservationId);
+  // 根据id到数据库查找数据
+  request.get("/api/reservation/find/" + row.reservationId).then(  // 找到就进行修改
+      res => {
+        // console.log("handleEdit.res = ", res)
+        if (res.code === "200") {
+          data.reservationForm = res.data;
+          data.dialogVisible = true;
+        }
+      }
+  )
 };
 
 // 删除预约信息
 const handleDelete = (row) => {
-  alert("删除按钮")
-  // console.log("row = ", row.notificationId);
-  // request.delete("/api/notification/del/" + row.notificationId).then(
-  //     res =>{
-  //       if (res.code === "200") {
-  //         ElMessage({
-  //           type:"success",
-  //           message:"删除成功"
-  //         })
-  //       } else {
-  //         ElMessage({
-  //           type: "error",
-  //           message:res.msg
-  //         })
-  //       }
-  //       // 刷新列表
-  //       list();
-  //     })
+  // alert("删除按钮")
+  console.log("row = ", row.reservationId);
+  request.delete("/api/reservation/del/" + row.reservationId).then(
+      res =>{
+        if (res.code === "200") {
+          ElMessage({
+            type:"success",
+            message:"删除成功"
+          })
+        } else {
+          ElMessage({
+            type: "error",
+            message:res.msg
+          })
+        }
+        // 刷新列表
+        list();
+      })
 };
 
 const save = () => {
-  alert("确认按钮")
-  // if (data.notificationForm.notificationId) {  // 修改通知
-  //   // alert("修改成功~~")
-  //   request.put("/api/notification/update", data.notificationForm).then(
-  //       res => {
-  //         if (res.code === "200") {
-  //           // 提示成功
-  //           ElMessage({
-  //             type: "success",
-  //             message: "编辑成功"
-  //           })
-  //         } else {
-  //           // 提示失败
-  //           ElMessage({
-  //             type: "error",
-  //             // message: res.msg
-  //             message: "编辑失败"
-  //           })
-  //         }
-  //         resetForm(); // 清空表单
-  //         data.dialogVisible = false; // 关闭弹出框
-  //         list(); // 刷新列表
-  //       }
-  //   )
-  // } else {  // 添加通知
-  //   // alert("添加成功~~");
-  //   request.post("/api/notification/save", data.notificationForm).then(
-  //       res => {
-  //         console.log("res=", res)
-  //         if (res.code === "200") {
-  //           ElMessage({
-  //             type: "success",
-  //             message: "添加成功!"
-  //           })
-  //         } else {
-  //           ElMessage({
-  //             type: "error",
-  //             message: "添加失败"
-  //           })
-  //         }
-  //         resetForm(); // 清空表单
-  //         data.dialogVisible = false; // 关闭弹出框
-  //         list();  // 刷新列表
-  //       }
-  //   )
-  // }
+  // alert("确认按钮")
+  if (data.reservationForm.reservationId) {  // 修改通知
+    // alert("修改成功~~")
+    request.put("/api/reservation/update", data.reservationForm).then(
+        res => {
+          if (res.code === "200") {
+            // 提示成功
+            ElMessage({
+              type: "success",
+              message: "编辑成功"
+            })
+          } else {
+            // 提示失败
+            ElMessage({
+              type: "error",
+              // message: res.msg
+              message: "编辑失败"
+            })
+          }
+          resetForm(); // 清空表单
+          data.dialogVisible = false; // 关闭弹出框
+          list(); // 刷新列表
+        }
+    )
+  } else {  // 添加通知
+    alert("添加成功~~");
+    request.post("/api/reservation/save", data.reservationForm).then(
+        res => {
+          console.log("res=", res)
+          if (res.code === "200") {
+            ElMessage({
+              type: "success",
+              message: "添加成功!"
+            })
+          } else {
+            ElMessage({
+              type: "error",
+              message: "添加失败"
+            })
+          }
+          resetForm(); // 清空表单
+          data.dialogVisible = false; // 关闭弹出框
+          list();  // 刷新列表
+        }
+    )
+  }
 };
 
 // 清空表单

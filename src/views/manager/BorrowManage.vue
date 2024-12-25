@@ -81,7 +81,7 @@
           <el-date-picker v-model="data.borrowForm.returnDate" type="date" value-format="YYYY-MM-DD" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="借阅状态" >
-          <el-input v-model="data.borrowForm.userId" style="width: 80%"></el-input>
+          <el-input v-model="data.borrowForm.status" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="罚款金额" >
           <el-input v-model="data.borrowForm.fineAmount" style="width: 80%"></el-input>
@@ -157,105 +157,104 @@ const openAddBookDialog = () => {
 // 显示通知信息
 const list = () => {
   console.log("刷新列表发送请求前...")
-  // // 查询、检索, 分页显示图书信息
-  // request.get("/api/borrow/BySearchPage", {
-  //   params: {
-  //     type: "borrow",   // 分页组件类型: book person
-  //     pageNum: data.currentPage,
-  //     pageSize: data.pageSize,
-  //   }
-  // }).then(res => {
-  //   console.log("borrowlist.res--", res)
-  //   // 绑定tableData, 显示在表格
-  //   console.log("res.data", res.data);
-  //   console.log("res.data.total = ", res.data.total)
-  //   data.tableData = res.data.records
-  //   data.total = res.data.total;
-  // })
+  // 查询、检索, 分页显示图书信息
+  request.get("/api/borrow/BySearchPage", {
+    params: {
+      pageNum: data.currentPage,
+      pageSize: data.pageSize,
+    }
+  }).then(res => {
+    console.log("borrowlist.res--", res)
+    // 绑定tableData, 显示在表格
+    console.log("res.data", res.data);
+    console.log("res.data.total = ", res.data.total)
+    data.tableData = res.data.records
+    data.total = res.data.total;
+  })
 }
 
 // 编辑图书信息
 const handleEdit = (row) => {
   console.log("handleEdit, row = ", row.recordId);
   // 根据id到数据库查找数据
-  // request.get("/api/borrow/find/" + row.recordId).then(  // 找到就进行修改
-  //     res => {
-  //       // console.log("handleEdit.res = ", res)
-  //       if (res.code === "200") {
-  //         data.borrowForm = res.data;
-  //         data.dialogVisible = true;
-  //       }
-  //     }
-  // )
+  request.get("/api/borrow/find/" + row.recordId).then(  // 找到就进行修改
+      res => {
+        // console.log("handleEdit.res = ", res)
+        if (res.code === "200") {
+          data.borrowForm = res.data;
+          data.dialogVisible = true;
+        }
+      }
+  )
 };
 
 // 删除通知
 const handleDelete = (row) => {
   // console.log("row = ", row.recordId);
-  // request.delete("/api/borrow/del/" + row.recordId).then(
-  //     res =>{
-  //       if (res.code === "200") {
-  //         ElMessage({
-  //           type:"success",
-  //           message:"删除成功"
-  //         })
-  //       } else {
-  //         ElMessage({
-  //           type: "error",
-  //           message:res.msg
-  //         })
-  //       }
-  //       // 刷新列表
-  //       list();
-  //     })
+  request.delete("/api/borrow/del/" + row.recordId).then(
+      res =>{
+        if (res.code === "200") {
+          ElMessage({
+            type:"success",
+            message:"删除成功"
+          })
+        } else {
+          ElMessage({
+            type: "error",
+            message:res.msg
+          })
+        }
+        // 刷新列表
+        list();
+      })
 };
 
 const save = () => {
-  alert("确认按钮")
+  // alert("确认按钮")
   if (data.borrowForm.recordId) {  // 修改通知
-    alert("修改成功~~")
-    // request.put("/api/borrow/update", data.borrowForm).then(
-    //     res => {
-    //       if (res.code === "200") {
-    //         // 提示成功
-    //         ElMessage({
-    //           type: "success",
-    //           message: "编辑成功"
-    //         })
-    //       } else {
-    //         // 提示失败
-    //         ElMessage({
-    //           type: "error",
-    //           // message: res.msg
-    //           message: "编辑失败"
-    //         })
-    //       }
-    //       resetForm(); // 清空表单
-    //       data.dialogVisible = false; // 关闭弹出框
-    //       list(); // 刷新列表
-    //     }
-    // )
+    // alert("修改成功~~")
+    request.put("/api/borrow/update", data.borrowForm).then(
+        res => {
+          if (res.code === "200") {
+            // 提示成功
+            ElMessage({
+              type: "success",
+              message: "编辑成功"
+            })
+          } else {
+            // 提示失败
+            ElMessage({
+              type: "error",
+              // message: res.msg
+              message: "编辑失败"
+            })
+          }
+          resetForm(); // 清空表单
+          data.dialogVisible = false; // 关闭弹出框
+          list(); // 刷新列表
+        }
+    )
   } else {  // 添加通知
-    alert("添加成功~~");
-    // request.post("/api/borrow/save", data.borrowForm).then(
-    //     res => {
-    //       console.log("res=", res)
-    //       if (res.code === "200") {
-    //         ElMessage({
-    //           type: "success",
-    //           message: "添加成功!"
-    //         })
-    //       } else {
-    //         ElMessage({
-    //           type: "error",
-    //           message: "添加失败"
-    //         })
-    //       }
-    //       resetForm(); // 清空表单
-    //       data.dialogVisible = false; // 关闭弹出框
-    //       list();  // 刷新列表
-    //     }
-    // )
+    // alert("添加成功~~");
+    request.post("/api/borrow/save", data.borrowForm).then(
+        res => {
+          console.log("res=", res)
+          if (res.code === "200") {
+            ElMessage({
+              type: "success",
+              message: "添加成功!"
+            })
+          } else {
+            ElMessage({
+              type: "error",
+              message: "添加失败"
+            })
+          }
+          resetForm(); // 清空表单
+          data.dialogVisible = false; // 关闭弹出框
+          list();  // 刷新列表
+        }
+    )
   }
 };
 
