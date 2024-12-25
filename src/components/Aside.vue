@@ -7,12 +7,7 @@
     <el-menu router :default-active="router.currentRoute.value.path" style="border: 0">
       <el-menu-item index="/manager/homePage">
         <el-icon><House /></el-icon>
-          系统首页
-      </el-menu-item>
-
-      <el-menu-item index="/manager/dataAnalysis">
-        <el-icon><DataAnalysis/></el-icon>
-        数据统计
+        系统首页
       </el-menu-item>
 
       <el-sub-menu index="2">
