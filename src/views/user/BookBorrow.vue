@@ -95,34 +95,30 @@
 <script>
 import UserHeader from "@/components/UserHeader.vue";
 import Footer from "@/components/Footer.vue";
+import request from "@/utils/request";
+import {reactive} from "vue";
 
 export default {
-  components: {Footer, UserHeader},
+  components: { Footer, UserHeader },
   data() {
     return {
       title: "用户图书借阅页面",
-      books: [
-        {id: 1, title: "图书1", borrowDate: "2024-12-01", borrowDays: 10, dueDate: "2024-12-11", status: "借阅中"},
-        {id: 2, title: "图书2", borrowDate: "2024-12-05", borrowDays: 5, dueDate: "2024-12-10", status: "借阅中"},
-        {id: 3, title: "图书3", borrowDate: "2024-11-25", borrowDays: 15, dueDate: "2024-12-10", status: "已归还"},
-        {id: 4, title: "图书4", borrowDate: "2024-10-20", borrowDays: 20, dueDate: "2024-11-10", status: "借阅中"},
-        {id: 5, title: "图书5", borrowDate: "2024-09-15", borrowDays: 30, dueDate: "2024-10-15", status: "已归还"},
-        {id: 6, title: "图书6", borrowDate: "2024-07-10", borrowDays: 5, dueDate: "2024-07-15", status: "借阅中"},
-        {id: 7, title: "图书7", borrowDate: "2024-06-01", borrowDays: 12, dueDate: "2024-06-13", status: "已归还"},
-      ],
+      books: [], // 初始为空，后端请求后填充
       searchTitle: "",
       searchId: "",
       currentPage: 1,
       pageSize: 5, // 每页显示5条记录
     };
   },
+  mounted() {
+    // 页面加载时请求后端数据
+    this.fetchBooks();
+  },
   computed: {
     // 计算过滤后的书籍
     filteredBooks() {
       return this.books.filter(book => {
-        const matchesTitle = this.searchTitle
-            ? book.title.includes(this.searchTitle)
-            : true;
+        const matchesTitle = this.searchTitle ? book.title.includes(this.searchTitle) : true;
         const matchesId = this.searchId ? book.id.toString().includes(this.searchId) : true;
         return matchesTitle && matchesId;
       });
@@ -134,8 +130,21 @@ export default {
       return this.filteredBooks.slice(start, end);
     }
   },
-
   methods: {
+    // 请求后端数据
+    fetchBooks() {
+      request.get('/api/borrow/borrowRecordList')
+          .then(res => {
+            if (res.data && Array.isArray(res.data)) {
+              this.books = res.data; // 成功获取数据后赋值给 books
+            } else {
+              console.error("数据格式错误", res.data);
+            }
+          })
+          .catch(error => {
+            console.error('获取分类列表失败', error);
+          });
+    },
     returnBook(bookId) {
       const book = this.books.find(b => b.id === bookId);
       if (book) {
@@ -165,10 +174,89 @@ export default {
     handlePageChange(page) {
       this.currentPage = page;
       console.log('当前页:', page);
-      // 在这里你可以请求新的数据，基于当前页和每页条数
+      // 如果需要可以请求新的数据
+      // this.fetchBooks(); // 根据当前页码重新获取数据
     }
-  }
-}
+  },
+};
+
+
+// export default {
+//   components: {Footer, UserHeader},
+//   data() {
+//     return {
+//       title: "用户图书借阅页面",
+//       books: [
+//         {id: 1, title: "图书1", borrowDate: "2024-12-01", borrowDays: 10, dueDate: "2024-12-11", status: "借阅中"},
+//         {id: 2, title: "图书2", borrowDate: "2024-12-05", borrowDays: 5, dueDate: "2024-12-10", status: "借阅中"},
+//         {id: 3, title: "图书3", borrowDate: "2024-11-25", borrowDays: 15, dueDate: "2024-12-10", status: "已归还"},
+//         {id: 4, title: "图书4", borrowDate: "2024-10-20", borrowDays: 20, dueDate: "2024-11-10", status: "借阅中"},
+//         {id: 5, title: "图书5", borrowDate: "2024-09-15", borrowDays: 30, dueDate: "2024-10-15", status: "已归还"},
+//         {id: 6, title: "图书6", borrowDate: "2024-07-10", borrowDays: 5, dueDate: "2024-07-15", status: "借阅中"},
+//         {id: 7, title: "图书7", borrowDate: "2024-06-01", borrowDays: 12, dueDate: "2024-06-13", status: "已归还"},
+//       ],
+//       searchTitle: "",
+//       searchId: "",
+//       currentPage: 1,
+//       pageSize: 5, // 每页显示5条记录
+//     };
+//   },
+//   computed: {
+//     // 计算过滤后的书籍
+//     filteredBooks() {
+//       return this.books.filter(book => {
+//         const matchesTitle = this.searchTitle
+//             ? book.title.includes(this.searchTitle)
+//             : true;
+//         const matchesId = this.searchId ? book.id.toString().includes(this.searchId) : true;
+//         return matchesTitle && matchesId;
+//       });
+//     },
+//     // 计算分页后的书籍数据
+//     paginatedBooks() {
+//       const start = (this.currentPage - 1) * this.pageSize;
+//       const end = start + this.pageSize;
+//       return this.filteredBooks.slice(start, end);
+//     }
+//   },
+//
+//   methods: {
+//     returnBook(bookId) {
+//       const book = this.books.find(b => b.id === bookId);
+//       if (book) {
+//         book.status = "已归还";
+//         alert(`图书《${book.title}》已成功归还！`);
+//       }
+//     },
+//     handleDuplicateBorrow(bookId) {
+//       const book = this.books.find(b => b.id === bookId);
+//       if (book.status === '已归还') {
+//         book.status = "借阅中";
+//         alert(`图书《${book.title}》已重新借阅！`);
+//       } else {
+//         alert(`图书《${book.title}》已经在借阅中，无法再次借阅！`);
+//       }
+//     },
+//     searchBooks() {
+//       // 查询时将页码重置为第一页
+//       this.currentPage = 1;
+//     },
+//     resetSearch() {
+//       this.searchTitle = "";
+//       this.searchId = "";
+//       this.currentPage = 1; // 重置分页
+//     },
+//     // 页码切换时触发的方法
+//     handlePageChange(page) {
+//       this.currentPage = page;
+//       console.log('当前页:', page);
+//       // 在这里你可以请求新的数据，基于当前页和每页条数
+//     }
+//   },
+// }
+
+
+
 </script>
 
 
