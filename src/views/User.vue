@@ -9,7 +9,7 @@
       <div style="width: 160px; padding: 20px; background-color: #f7f7f7; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1)">
         <div style="text-align: center; margin-bottom: 20px">
           <img src="@/assets/book.png" alt="" style="width: 50%">
-          <div style="font-size: 14px; color: #8b5a2b; margin-top: 10px;">莫负年华，阅读正当时</div>
+          <div style="font-size: 14px; color: #8b5a2b; margin-top: 10px;">阅读，让心灵在书海中自由翱翔</div>
         </div>
         <el-row :gutter="10">
           <el-col :span="12" style="text-align: center; margin-bottom: 10px" v-for="item in data.categoryList" :key="item.categoryId">

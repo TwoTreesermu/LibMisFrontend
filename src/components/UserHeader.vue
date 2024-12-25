@@ -1,12 +1,6 @@
 <template>
   <!--头部菜单栏-->
-  <div style="align-items: center;
-              height: 60px;
-              line-height: 50px;
-              border-bottom: 1px solid #ccc;
-              background-color: #638ce8;
-              display:flex"
-  >
+  <div style="align-items: center; height: 60px; line-height: 50px; border-bottom: 1px solid #ccc; background-color: #638ce8; display: flex">
     <!--左侧Logo,标题区域开始-->
     <router-link to="/user" style="text-decoration: none;">
       <div style="width: 200px; display: flex; margin-left: 5px;">
@@ -45,11 +39,10 @@
         <span class="el-dropdown-link" style="font-size: 20px; color: gold" >{{data.user.username}}</span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="goToBorrow">我的借阅</el-dropdown-item>
-            <el-dropdown-item @click="goToReservation">我的预约</el-dropdown-item>
-            <el-dropdown-item @click="goToPersonalInfo">个人信息</el-dropdown-item>
-            <el-dropdown-item><router-link to="">修改密码</router-link></el-dropdown-item>
-            <el-dropdown-item><router-link to="/login">退出登录</router-link></el-dropdown-item>
+            <el-dropdown-item @click="goToBorrow" class="dropdown-item-color">我的借阅</el-dropdown-item>
+            <el-dropdown-item @click="goToReservation" class="dropdown-item-color">我的预约</el-dropdown-item>
+            <el-dropdown-item @click="goToPersonalInfo" class="dropdown-item-color">个人信息</el-dropdown-item>
+            <el-dropdown-item @click="goToLogin" class="dropdown-item-color">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -99,8 +92,16 @@ const goToPersonalInfo = () => {
   router.push("/user/personalInfo");
 };
 
+// 跳转到用户个人信息页面
+const goToLogin = () => {
+  router.push("/Login");
+};
+
 </script>
 
 <style scoped>
-/* 可根据需要调整样式 */
+/* 统一设置dropdown项的颜色 */
+.dropdown-item-color {
+  color: gold;
+}
 </style>

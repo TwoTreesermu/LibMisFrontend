@@ -23,7 +23,7 @@
         <span class="el-dropdown-link" style="font-size: 20px; color: gold" >{{data.user.username}}</span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item><router-link to="">个人信息</router-link></el-dropdown-item>
+            <el-dropdown-item><router-link to="/manager/managerInfo">个人信息</router-link></el-dropdown-item>
             <el-dropdown-item><router-link to="">修改密码</router-link></el-dropdown-item>
             <el-dropdown-item><router-link to="/login">退出登录</router-link></el-dropdown-item>
           </el-dropdown-menu>
