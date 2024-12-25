@@ -148,6 +148,56 @@ import UserHeader from "@/components/UserHeader.vue";
 import Footer from "@/components/Footer.vue";
 import { computed } from 'vue';
 import { format } from 'date-fns';
+import coverPic1 from '@/assets/coverPic/1.jpg';
+import coverPic2 from '@/assets/coverPic/2.jpg';
+import coverPic3 from '@/assets/coverPic/3.jpg';
+import coverPic4 from '@/assets/coverPic/4.jpg';
+import coverPic5 from '@/assets/coverPic/5.jpg';
+import coverPic6 from '@/assets/coverPic/6.jpg';
+import coverPic7 from '@/assets/coverPic/7.jpg';
+import coverPic8 from '@/assets/coverPic/8.jpg';
+import coverPic9 from '@/assets/coverPic/9.jpg';
+import coverPic10 from '@/assets/coverPic/10.jpg';
+import coverPic11 from '@/assets/coverPic/11.jpg';
+import coverPic12 from '@/assets/coverPic/12.jpg';
+import coverPic13 from '@/assets/coverPic/13.jpg';
+import coverPic14 from '@/assets/coverPic/14.jpg';
+import coverPic15 from '@/assets/coverPic/15.jpg';
+import coverPic16 from '@/assets/coverPic/16.jpg';
+import coverPic17 from '@/assets/coverPic/17.jpg';
+import coverPic18 from '@/assets/coverPic/18.jpg';
+import coverPic19 from '@/assets/coverPic/19.jpg';
+import coverPic20 from '@/assets/coverPic/20.jpg';
+import coverPic21 from '@/assets/coverPic/21.jpg';
+import coverPic22 from '@/assets/coverPic/22.jpg';
+import coverPic23 from '@/assets/coverPic/23.jpg';
+import coverPic24 from '@/assets/coverPic/24.jpg';
+import coverPic25 from '@/assets/coverPic/25.jpg';
+import coverPic26 from '@/assets/coverPic/26.jpg';
+import coverPic27 from '@/assets/coverPic/27.jpg';
+import coverPic28 from '@/assets/coverPic/28.jpg';
+import coverPic29 from '@/assets/coverPic/29.jpg';
+import coverPic30 from '@/assets/coverPic/30.jpg';
+import coverPic31 from '@/assets/coverPic/31.jpg';
+import coverPic32 from '@/assets/coverPic/32.jpg';
+import coverPic33 from '@/assets/coverPic/33.jpg';
+import coverPic34 from '@/assets/coverPic/34.jpg';
+import coverPic35 from '@/assets/coverPic/35.jpg';
+import coverPic36 from '@/assets/coverPic/36.jpg';
+import coverPic37 from '@/assets/coverPic/37.jpg';
+import coverPic38 from '@/assets/coverPic/38.jpg';
+import coverPic39 from '@/assets/coverPic/39.jpg';
+import coverPic40 from '@/assets/coverPic/40.jpg';
+import coverPic41 from '@/assets/coverPic/41.jpg';
+import coverPic42 from '@/assets/coverPic/42.jpg';
+import coverPic43 from '@/assets/coverPic/43.jpg';
+import coverPic44 from '@/assets/coverPic/44.jpg';
+import coverPic45 from '@/assets/coverPic/45.jpg';
+import coverPic46 from '@/assets/coverPic/46.jpg';
+import coverPic47 from '@/assets/coverPic/47.jpg';
+import coverPic48 from '@/assets/coverPic/48.jpg';
+import coverPic49 from '@/assets/coverPic/49.jpg';
+import coverPic50 from '@/assets/coverPic/50.jpg';
 
 // 获取路由参数
 const route = useRoute();
@@ -155,7 +205,19 @@ const route = useRoute();
 // 创建响应式数据
 const bookDetail = reactive({
   bookInfo: null,
-  bookList: []  // 存储所有图书列表
+  bookList: [],  // 存储所有图书列表
+  coverPicList: [
+    coverPic1, coverPic2, coverPic3, coverPic4, coverPic5,
+    coverPic6, coverPic7, coverPic8, coverPic9, coverPic10,
+    coverPic11, coverPic12, coverPic13, coverPic14, coverPic15,
+    coverPic16, coverPic17, coverPic18, coverPic19, coverPic20,
+    coverPic21, coverPic22, coverPic23, coverPic24, coverPic25,
+    coverPic26, coverPic27, coverPic28, coverPic29, coverPic30,
+    coverPic31, coverPic32, coverPic33, coverPic34, coverPic35,
+    coverPic36, coverPic37, coverPic38, coverPic39, coverPic40,
+    coverPic41, coverPic42, coverPic43, coverPic44, coverPic45,
+    coverPic46, coverPic47, coverPic48, coverPic49, coverPic50
+  ],
 });
 
 const commentText = reactive({
@@ -163,6 +225,7 @@ const commentText = reactive({
   UserList: [],  // 存储所有用户列表
 });
 const comments = reactive([]);
+
 
 // 请求图书列表并根据 bookId 获取对应的书籍信息
 onMounted(() => {
@@ -173,6 +236,11 @@ onMounted(() => {
         const bookId = Number(route.params.bookId);  // 获取传递的 bookId 并强制转换为数字
         // 根据 bookId 找到对应的图书信息
         bookDetail.bookInfo = bookDetail.bookList.find(book => book.bookId === bookId);
+        // 给每本书分配封面图片
+        bookDetail.bookList.forEach((book, index) => {
+          // 根据索引从 coverPicList 中获取封面图，假设bookId与索引一一对应
+          book.coverPic = bookDetail.coverPicList[index];  // 使用 index 作为图片的映射
+        });
       })
       .catch(error => {
         console.error('获取图书列表失败', error);
