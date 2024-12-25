@@ -30,7 +30,7 @@
           <!--<el-menu-item index="/manager/administration">管理员信息</el-menu-item>-->
           <el-menu-item index="/manager/user">用户信息</el-menu-item>
       </el-sub-menu>
-      <el-menu-item index="/login">
+      <el-menu-item index="/login" @click="">
         <el-icon><SwitchButton /></el-icon>
         退出登录
       </el-menu-item>
@@ -39,11 +39,7 @@
 </template>
 
 <script setup>
-import {
-  DataAnalysis,
-  House, Memo, SwitchButton,
-
-} from '@element-plus/icons-vue'
+import { House, Memo, SwitchButton, } from '@element-plus/icons-vue'
 import router from "@/router";
 
 const componentName ="Aside";
