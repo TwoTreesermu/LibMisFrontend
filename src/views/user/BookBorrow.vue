@@ -1,5 +1,4 @@
 <template>
-
   <div>
     <UserHeader />
   </div>
@@ -47,7 +46,7 @@
       </div>
 
       <!-- 图书借阅记录 -->
-      <el-table :data="books" style="width: 100%;" border>
+      <el-table :data="paginatedBooks" style="width: 100%;" border>
         <el-table-column label="书籍名称" prop="title"></el-table-column>
         <el-table-column label="借阅编号" prop="id"></el-table-column>
         <el-table-column label="借阅日期" prop="borrowDate"></el-table-column>
@@ -64,6 +63,14 @@
             >
               归还
             </el-button>
+            <el-button
+                v-if="row.status === '已归还'"
+                type="warning"
+                size="small"
+                @click="handleDuplicateBorrow(row.id)"
+            >
+              重新借阅
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -72,7 +79,7 @@
       <el-pagination
           background
           layout="prev, pager, next"
-          :total="total"
+          :total="filteredBooks.length"
           :page-size="pageSize"
           :current-page="currentPage"
           @current-change="handlePageChange"
@@ -84,10 +91,10 @@
 </template>
 
 
+
 <script>
 import UserHeader from "@/components/UserHeader.vue";
 import Footer from "@/components/Footer.vue";
-import axios from "axios";
 
 export default {
   components: {Footer, UserHeader},
@@ -136,6 +143,15 @@ export default {
         alert(`图书《${book.title}》已成功归还！`);
       }
     },
+    handleDuplicateBorrow(bookId) {
+      const book = this.books.find(b => b.id === bookId);
+      if (book.status === '已归还') {
+        book.status = "借阅中";
+        alert(`图书《${book.title}》已重新借阅！`);
+      } else {
+        alert(`图书《${book.title}》已经在借阅中，无法再次借阅！`);
+      }
+    },
     searchBooks() {
       // 查询时将页码重置为第一页
       this.currentPage = 1;
@@ -150,11 +166,11 @@ export default {
       this.currentPage = page;
       console.log('当前页:', page);
       // 在这里你可以请求新的数据，基于当前页和每页条数
-      // this.fetchData(page, this.pageSize);
     }
   }
 }
 </script>
+
 
 <style scoped>
 .main-body {
