@@ -67,9 +67,6 @@
         width="80%" height="80%"
         @close="resetForm" >
       <el-form :model="data.notificationForm">
-        <el-form-item label="通知ID" >
-          <el-input v-model="data.notificationForm.notificationId" style="width: 80%"></el-input>
-        </el-form-item>
         <el-form-item label="通知标题" >
           <el-input v-model="data.notificationForm.title" style="width: 80%"></el-input>
         </el-form-item>
@@ -80,10 +77,10 @@
           <el-input v-model="data.notificationForm.adminId" style="width: 80%"></el-input>
         </el-form-item>
         <el-form-item label="发布时间"  >
-          <el-date-picker v-model="data.notificationForm.publishDate" type="date" value-format="YYYY-MM-DD-HH-mm-ss" placeholder="选择日期"></el-date-picker>
+          <el-date-picker v-model="data.notificationForm.publishDate" type="date" value-format="YYYY-MM-DD" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="过期时间"  >
-          <el-date-picker v-model="data.notificationForm.expireDate" type="date" value-format="YYYY-MM-DD-HH-mm-ss" placeholder="选择日期"></el-date-picker>
+          <el-date-picker v-model="data.notificationForm.expireDate" type="date" value-format="YYYY-MM-DD" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="状态" >
           <el-select v-model="data.notificationForm.status" placeholder="请选择状态">
@@ -138,13 +135,13 @@ const data = reactive({
 const handlePageSizeChange  = (pageSize) => {
   // console.log("pageSize---", pageSize)
   data.pageSize = pageSize;
-  // list();
+  list();
 }
 
 const handleCurrentChange = (pageNum) => {  // pageNum 跳转页数
   // console.log("pageNum---", pageNum)
   data.currentPage = pageNum;
-  // list();
+  list();
 }
 
 const formatDate = (row, column, value) => {
@@ -154,13 +151,9 @@ const formatDate = (row, column, value) => {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();
-  const hour = date.getHours();
-  const minute = date.getMinutes();
-  const second = date.getSeconds();
 
-  // 使用.padStart()确保月、日、小时、分钟和秒都是两位数的格式
-  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}`;
-};
+  return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+}
 
 // 设置对话框为可见
 const openAddBookDialog = () => {
@@ -170,122 +163,105 @@ const openAddBookDialog = () => {
 const list = () => {
   console.log("刷新列表发送请求前...")
   // 查询、检索, 分页显示图书信息
-  request.get("/api/notification/categoryList", {
+  request.get("/api/notification/BySearchPage", {
     params: {
-      type: "book",   // 分页组件类型: book person
+      type: "notification",   // 分页组件类型: book person
       pageNum: data.currentPage,
       pageSize: data.pageSize,
     }
   }).then(res => {
     console.log("notificationlist.res--", res)
     // 绑定tableData, 显示在表格
+    console.log("res.data", res.data);
+    console.log("res.data.total = ", res.data.total)
     data.tableData = res.data.records
     data.total = res.data.total;
-
-    // console.log("res.data", res.data);
-    // console.log("res.data.total = ", res.data.total)
   })
 }
 
 // 编辑图书信息
 const handleEdit = (row) => {
-  // console.log("handleEdit, row = ", row.bookId);
+  console.log("handleEdit, row = ", row.notificationId);
   // 根据id到数据库查找数据
-  // request.get("/api/books/find/" + row.bookId).then(  // 找到就进行修改
-  //     res => {
-  //       // console.log("handleEdit.res = ", res)
-  //       if (res.code == 200) {
-  //         data.bookForm = res.data;
-  //         data.dialogVisible = true;
-  //       }
-  //     }
-  // )
+  request.get("/api/notification/find/" + row.notificationId).then(  // 找到就进行修改
+      res => {
+        // console.log("handleEdit.res = ", res)
+        if (res.code === "200") {
+          data.notificationForm = res.data;
+          data.dialogVisible = true;
+        }
+      }
+  )
 };
 
 // 删除图书
 const handleDelete = (row) => {
-  // console.log("row = ", row.bookId);
-  // request.delete("/api/books/del/" + row.bookId).then(
-  //     res =>{
-  //       console.log("res.delete = ", res);
-  //       console.log("res.code =", res.code);
-  //       if (res.code == 200) {
-  //         console.log("hello01")
-  //         ElMessage({
-  //           type:"success",
-  //           message:"删除成功"
-  //         })
-  //       } else {
-  //         console.log("hello02~~")
-  //         ElMessage({
-  //           type: "error",
-  //           message:res.msg
-  //         })
-  //       }
-  //       // 刷新列表
-  //       list();
-  //     })
+  // console.log("row = ", row.notificationId);
+  request.delete("/api/notification/del/" + row.notificationId).then(
+      res =>{
+        if (res.code === "200") {
+          ElMessage({
+            type:"success",
+            message:"删除成功"
+          })
+        } else {
+          ElMessage({
+            type: "error",
+            message:res.msg
+          })
+        }
+        // 刷新列表
+        list();
+      })
 };
 
 const save = () => {
-  alert("确认按钮")
-  // if (data.bookForm.bookId) {  // 修改图书信息
-  //   // alert("修改成功~~")
-  //   request.put("/api/books/update", data.bookForm).then(
-  //       res => {
-  //         if (res.code === "200") {
-  //           // 提示成功
-  //           ElMessage({
-  //             type: "success",
-  //             message: "编辑成功"
-  //           })
-  //         } else {
-  //           // 提示失败
-  //           ElMessage({
-  //             type: "error",
-  //             // message: res.msg
-  //             message: "编辑失败"
-  //           })
-  //         }
-  //         resetForm(); // 清空表单
-  //         data.dialogVisible = false; // 关闭弹出框
-  //         list(); // 刷新列表
-  //       }
-  //   )
-  // } else {  // 添加图书信息
-  //   // alert("添加成功~~");
-  //   formRef.value.validate((valid) => {
-  //     if (valid) {
-  //       // alert("通过验证");
-  //       request.post("/api/books/save", data.bookForm).then(
-  //           res => {
-  //             console.log("res=", res)
-  //             if (res.code == 200) {
-  //               ElMessage({
-  //                 type: "success",
-  //                 message: "添加成功!"
-  //               })
-  //             } else {
-  //               ElMessage({
-  //                 type: "error",
-  //                 message: "更新失败"
-  //               })
-  //             }
-  //             resetForm(); // 清空表单
-  //             data.dialogVisible = false; // 关闭弹出框
-  //             list();  // 刷新列表
-  //           }
-  //       )
-  //     } else {
-  //       ElMessage({ // 弹出更新失败信息
-  //         type: "error",
-  //         message:"验证失败，不提交"
-  //       })
-  //       return false
-  //     }
-  //   })
-  //
-  // }
+  // alert("确认按钮")
+  if (data.notificationForm.notificationId) {  // 修改通知
+    // alert("修改成功~~")
+    request.put("/api/notification/update", data.notificationForm).then(
+        res => {
+          if (res.code === "200") {
+            // 提示成功
+            ElMessage({
+              type: "success",
+              message: "编辑成功"
+            })
+          } else {
+            // 提示失败
+            ElMessage({
+              type: "error",
+              // message: res.msg
+              message: "编辑失败"
+            })
+          }
+          resetForm(); // 清空表单
+          data.dialogVisible = false; // 关闭弹出框
+          list(); // 刷新列表
+        }
+    )
+  } else {  // 添加通知
+    // alert("添加成功~~");
+    request.post("/api/notification/save", data.notificationForm).then(
+        res => {
+          console.log("res=", res)
+          if (res.code === "200") {
+            ElMessage({
+              type: "success",
+              message: "添加成功!"
+            })
+          } else {
+            ElMessage({
+              type: "error",
+              message: "添加失败"
+            })
+          }
+          resetForm(); // 清空表单
+          data.dialogVisible = false; // 关闭弹出框
+          list();  // 刷新列表
+        }
+    )
+  }
 };
 
 // 清空表单
