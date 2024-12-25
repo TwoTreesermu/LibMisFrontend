@@ -24,7 +24,7 @@
         <el-table-column prop="title" label="书名"></el-table-column>
         <el-table-column prop="author" label="作者"></el-table-column>
         <el-table-column prop="publisher" label="出版社"></el-table-column>
-        <el-table-column prop="publishDate" label="出版时间"></el-table-column>
+        <el-table-column prop="publishDate" label="出版时间" :formatter="formatDate"></el-table-column>
         <el-table-column prop="introduction" label="简介"></el-table-column>
         <el-table-column prop="price" label="价格"></el-table-column>
         <el-table-column prop="coverPic" label="图书封面"></el-table-column>
@@ -38,7 +38,7 @@
                 <el-button size="mini" type="text">删除</el-button>
               </template>
             </el-popconfirm>
-            <!--<el-button @click="handleDelete(scope.row.id)" type="text">删除</el-button>-->
+
           </template>
         </el-table-column>
       </el-table>
@@ -191,31 +191,20 @@ const handleCurrentChange = (pageNum) => {  // pageNum 跳转页数
   list();
 }
 
+const formatDate = (row, column, value) => {
+  if (!value) return '';
+
+  const date = new Date(value);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+}
+
 // 显示图书信息
 const list = () => {
   console.log("刷新列表发送请求前...")
-  // request.get("/api/books/booksList").then(res =>{
-  //   console.log("res= ", res)
-  //   data.tableData = res.data;
-  // })
-
-  // 分页查询
-  // console.log("data.currentPage = ", data.currentPage);
-  // console.log("data.pageSize = ", data.pageSize);
-  // request.get("/api/books/booksByPage",{
-  //   params: {
-  //     pageNum: data.currentPage,
-  //     pageSize: data.pageSize
-  //   }
-  // }).then(res => {
-  //   //绑定tableData, 显示在表格
-  //   console.log("返回的res=", res);
-  //   console.log("res.data", res.data);
-  //   data.tableData = res.data.records;
-  //   console.log("res.data.total = ", res.data.total)
-  //   data.total = res.data.total;
-  // })
-
   // 查询、检索, 分页显示图书信息
   request.get("/api/books/BySearchPage", {
     params: {
@@ -225,13 +214,10 @@ const list = () => {
       search: data.search
     }
   }).then(res => {
-    console.log("res", res)
+    console.log("list.res--", res)
     // 绑定tableData, 显示在表格
     data.tableData = res.data.records
     data.total = res.data.total;
-
-    // console.log("res.data", res.data);
-    // console.log("res.data.total = ", res.data.total)
   })
 }
 
@@ -339,7 +325,6 @@ const save = () => {
       }
     })
 
-
   }
 };
 
@@ -349,7 +334,6 @@ const resetForm = () => {
 };
 
 onMounted(list)
-
 
 </script>
 

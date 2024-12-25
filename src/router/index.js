@@ -4,8 +4,6 @@ import UserManage from "@/views/manager/UserManage.vue";
 import NotificationManage from "@/views/manager/NotificationManage.vue";
 import ReservationManage from "@/views/manager/ReservationManage.vue";
 import BorrowManage from "@/views/manager/BorrowManage.vue";
-import AdministratorManage from "@/views/manager/AdministratorManage.vue";
-
 
 const routes = [
   {
@@ -19,14 +17,37 @@ const routes = [
     path: "/register", name:"Register", component: () => import("../views/Register.vue"),
     meta: {title: '欢迎注册'}
   },
-  {  // 用户页面
-    path:"/user", name: "User", component: () => import("../views/User.vue"),
-    meta: {title: '用户首页'},
-    children: [
-      { // 用户可视化首页
-        path: "home", name: "Home", component: () => import("../views/user/Home.vue"),
-      }
-    ]
+  { // 用户页面
+    path: "/user", name: "User", component: () => import("../views/User.vue"),
+    meta: { title: '用户首页' },
+  },
+  { // 图书分类页面
+    path: "/user/bookCategory/:categoryId", name: "BookCategory", component: () => import("../views/user/BookCategory.vue"),
+    meta: { title: '图书分类页面' },
+  },
+  { // 图书详情页面
+    path: "/user/bookDetail/:bookId", name: "BookDetail", component: () => import("../views/user/BookDetail.vue"),
+    meta: { title: '图书详情页面' },
+  },
+  { // 图书评论页面
+    path: "/user/bookComment/:commentId", name: "BookComment", component: () => import("../views/user/BookComment.vue"),
+    meta: { title: '图书评论页面' },
+  },
+  { // 用户图书借阅页面
+    path: "/user/bookBorrow", name: "BookBorrow", component: () => import("../views/user/BookBorrow.vue"),
+    meta: { title: '用户图书借阅页面' },
+  },
+  { // 用户图书预约页面
+    path: "/user/bookReservation", name: "BookReservation", component: () => import("../views/user/BookReservation.vue"),
+    meta: { title: '用户图书预约页面' },
+  },
+  { // 用户个人信息页面
+    path: "/user/personalInfo", name: "PersonalInfo", component: () => import("../views/user/PersonalInfo.vue"),
+    meta: { title: '用户个人信息页面' },
+  },
+  { // 图书搜索页面'
+    path: '/user/search', name: 'Search', component: () => import("../views/user/SearchPage.vue"),
+    meta: { title: '图书搜索页面' }, props: route => ({ query: route.query.query })  // 将查询参数传递给组件
   },
   { // 管理员页面
     path: '/manager', name: 'Manager', component: () => import("../views/Manager.vue"),
@@ -59,14 +80,6 @@ const routes = [
         path: 'borrow', name: 'BorrowManage', component: BorrowManage,
         meta: {title: '借阅管理'}
       },
-      { // 管理员信息
-        path: 'administration', name: 'AdministrationManage', component: AdministratorManage,
-        meta: {title: '管理员信息'}
-      },
-      { // 数据统计
-        path: 'dataAnalysis', name: 'DataAnalysis', component: () => import("../views/manager/DataAnalysis.vue"),
-
-      }
     ],
   },
   { // 404
